@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { getListings } from "../services/api"
 import { Listing } from "../types/listing"
-import ListingCard from "../components/ListingCard"
+import ListingCard from "./ListingCard"
 
 export default function PopularDestinations() {
   const [listings, setListings] = useState<Listing[]>([])
@@ -13,8 +13,8 @@ export default function PopularDestinations() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getListings()   // res is Listing[]
-        setListings(res)                  // ✅ remove .data
+        const res = await getListings() // ✅ Listing[]
+        setListings(res)                // ✅ DO NOT use .data
       } catch (err) {
         console.error(err)
         setError("Failed to load destinations.")
@@ -22,7 +22,6 @@ export default function PopularDestinations() {
         setLoading(false)
       }
     }
-
     fetchData()
   }, [])
 
@@ -40,6 +39,49 @@ export default function PopularDestinations() {
     </section>
   )
 }
+
+// "use client"
+
+// import React, { useEffect, useState } from "react"
+// import { getListings } from "../services/api"
+// import { Listing } from "../types/listing"
+// import ListingCard from "../components/ListingCard"
+
+// export default function PopularDestinations() {
+//   const [listings, setListings] = useState<Listing[]>([])
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState("")
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const res = await getListings()   // res is Listing[]
+//         setListings(res)                  // ✅ remove .data
+//       } catch (err) {
+//         console.error(err)
+//         setError("Failed to load destinations.")
+//       } finally {
+//         setLoading(false)
+//       }
+//     }
+
+//     fetchData()
+//   }, [])
+
+//   if (loading) return <div className="text-center py-10">Loading...</div>
+//   if (error) return <div className="text-center py-10 text-red-500">{error}</div>
+
+//   return (
+//     <section className="max-w-7xl mx-auto px-6 py-10">
+//       <h2 className="text-3xl font-bold mb-8 text-center">Popular Destinations</h2>
+//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//         {listings.map(listing => (
+//           <ListingCard key={listing._id} listing={listing} />
+//         ))}
+//       </div>
+//     </section>
+//   )
+// }
 
 // "use client"
 
