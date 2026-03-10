@@ -1,6 +1,6 @@
 // types/listing.ts
 export interface Listing {
-  id: string
+  _id: string          // MongoDB ID
   title: string
   location: string
   description: string
