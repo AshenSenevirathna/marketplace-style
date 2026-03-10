@@ -4,6 +4,9 @@ import { useEffect, useState } from "react"
 import { getListings } from "../services/api"
 import ListingCard from "../components/ListingCard"
 import { Listing } from "../types/listing"
+import HomePage from "./home/page"
+
+
 
 export default function Home() {
 
@@ -21,7 +24,7 @@ export default function Home() {
   return (
     <div>
 
-      <h1>Travel Experiences</h1>
+      <HomePage/>
 
       <div className="grid">
         {listings.map((listing) => (
