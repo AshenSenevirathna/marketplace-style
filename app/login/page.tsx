@@ -49,7 +49,7 @@
 //   )
 // }
 
-"use client"
+"use client";
 
 import axios from "axios";
 import Link from "next/link"
@@ -64,28 +64,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  // async function login() {
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/api/users/`, {
-  //       email,
-  //       password
-  //     });
-  //     localStorage.setItem("token", response.data.token);
-  //     const user = response.data.user;
-  //     toast.success("Login Successful");
-  //     router.push("/");
-  //     // if (user.role === "admin") {
-  //     //   router.push("/admin");
-  //     // } else {
-  //     //   router.push("/")
-  //     // }
-  //     //console.log(response.data);
-  //   } catch (e) {
-  //     console.error("Login failed:", e)
-  //     toast.error("Login failed.Please check your credentials");
-  //   }
-  // }
+  async function login() {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/login`, {
+        email,
+        password
+      });
+      localStorage.setItem("token", response.data.token);
+      const user = response.data.user;
+      toast.success("Login Successful");
+      router.push("/");
+      if (user.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/")
+      }
+      //console.log(response.data);
+    } catch (e) {
+      console.error("Login failed:", e)
+      toast.error("Login failed.Please check your credentials");
+    }
+  }
+
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 relative">
