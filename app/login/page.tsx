@@ -51,10 +51,42 @@
 
 "use client"
 
+import axios from "axios";
 import Link from "next/link"
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaEnvelope, FaLock } from "react-icons/fa"
 
 export default function LoginPage() {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  // async function login() {
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/api/users/`, {
+  //       email,
+  //       password
+  //     });
+  //     localStorage.setItem("token", response.data.token);
+  //     const user = response.data.user;
+  //     toast.success("Login Successful");
+  //     router.push("/");
+  //     // if (user.role === "admin") {
+  //     //   router.push("/admin");
+  //     // } else {
+  //     //   router.push("/")
+  //     // }
+  //     //console.log(response.data);
+  //   } catch (e) {
+  //     console.error("Login failed:", e)
+  //     toast.error("Login failed.Please check your credentials");
+  //   }
+  // }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 relative">
 
@@ -82,6 +114,7 @@ export default function LoginPage() {
         <div className="relative mb-4">
           <FaEnvelope className="absolute left-3 top-4 text-gray-300" />
           <input
+          onChange={(e)=>setEmail(e.target.value)}
             type="email"
             placeholder="Email Address"
             className="w-full pl-10 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
@@ -92,6 +125,7 @@ export default function LoginPage() {
         <div className="relative mb-3">
           <FaLock className="absolute left-3 top-4 text-gray-300" />
           <input
+          onChange={(e)=>setPassword(e.target.value)}
             type="password"
             placeholder="Password"
             className="w-full pl-10 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
@@ -109,7 +143,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Button */}
-        <button className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold hover:bg-yellow-300 transition">
+        <button onClick={login} className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold hover:bg-yellow-300 transition">
           Login
         </button>
 
