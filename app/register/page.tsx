@@ -59,10 +59,63 @@
 
 "use client"
 
+import axios from "axios";
+//import { Import } from "lucide-react";
 import Link from "next/link"
+import { useRouter } from "next/router";
+import { useState } from "react"
+import toast from "react-hot-toast";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa"
 
 export default function RegisterPage() {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const router = useRouter();
+
+  // async function register() {
+  //   try {
+  //     const response = await axios.post(
+  //       import.meta.env.VITE_API_URL + "/api/users/", {
+  //       email: email,
+  //       password: password,
+  //       firstName: firstName,
+  //       lastName: lastName
+  //     });
+
+  //     toast.success("Registration Successful! Please Login");
+  //     navigate("/login");
+
+  //   } catch (e) {
+  //     console.error("Login failed:", e)
+  //     toast.error("Login failed.Please check your credentials");
+  //   }
+  // }
+
+  async function register() {
+    try {
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users`,
+        {
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName
+        }
+      )
+
+      toast.success("Registration Successful! Please Login 🎉")
+      router.push("/login")
+
+    } catch (e) {
+      console.error("Registration failed:", e)
+      toast.error("Registration failed. Please check your details ❌")
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center relative">
 
