@@ -57,12 +57,11 @@
 //   )
 // }
 
-"use client"
+"use client";
 
 import axios from "axios";
-//import { Import } from "lucide-react";
 import Link from "next/link"
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react"
 import toast from "react-hot-toast";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa"
@@ -74,25 +73,6 @@ export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const router = useRouter();
-
-  // async function register() {
-  //   try {
-  //     const response = await axios.post(
-  //       import.meta.env.VITE_API_URL + "/api/users/", {
-  //       email: email,
-  //       password: password,
-  //       firstName: firstName,
-  //       lastName: lastName
-  //     });
-
-  //     toast.success("Registration Successful! Please Login");
-  //     navigate("/login");
-
-  //   } catch (e) {
-  //     console.error("Login failed:", e)
-  //     toast.error("Login failed.Please check your credentials");
-  //   }
-  // }
 
   async function register() {
     try {
@@ -143,6 +123,7 @@ export default function RegisterPage() {
         <div className="relative mb-4">
           <FaUser className="absolute left-3 top-4 text-gray-300" />
           <input
+            onChange={(e) => setFirstName(e.target.value)}
             type="text"
             placeholder="First Name"
             className="w-full pl-10 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
@@ -153,6 +134,7 @@ export default function RegisterPage() {
         <div className="relative mb-4">
           <FaUser className="absolute left-3 top-4 text-gray-300" />
           <input
+            onChange={(e) => setLastName(e.target.value)}
             type="text"
             placeholder="Last Name"
             className="w-full pl-10 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
@@ -163,6 +145,7 @@ export default function RegisterPage() {
         <div className="relative mb-4">
           <FaEnvelope className="absolute left-3 top-4 text-gray-300" />
           <input
+            onChange={(e) => setEmail(e.target.value)}
             type="email"
             placeholder="Email Address"
             className="w-full pl-10 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
@@ -173,6 +156,7 @@ export default function RegisterPage() {
         <div className="relative mb-6">
           <FaLock className="absolute left-3 top-4 text-gray-300" />
           <input
+            onChange={(e) => setPassword(e.target.value)}
             type="password"
             placeholder="Password"
             className="w-full pl-10 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-yellow-400"
@@ -180,7 +164,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Button */}
-        <button className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold hover:bg-yellow-300 transition">
+        <button onClick={register} className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold hover:bg-yellow-300 transition">
           Register
         </button>
 
