@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { getListings } from "../services/api"
+//import { getListings } from "../services/api"
 import { Listing } from "../types/listing"
 import ListingCard from "./ListingCard"
 
@@ -10,20 +10,20 @@ export default function PopularDestinations() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getListings() // ✅ Listing[]
-        setListings(res)                // ✅ DO NOT use .data
-      } catch (err) {
-        console.error(err)
-        setError("Failed to load destinations.")
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await getListings() // ✅ Listing[]
+  //       setListings(res)                // ✅ DO NOT use .data
+  //     } catch (err) {
+  //       console.error(err)
+  //       setError("Failed to load destinations.")
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [])
 
   if (loading) return <div className="text-center py-10">Loading...</div>
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>
