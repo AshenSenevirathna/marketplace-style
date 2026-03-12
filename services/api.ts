@@ -1,4 +1,17 @@
 // // services/api.ts
+// import axios from "axios"
+// import { Listing } from "../types/listing"
+
+// export const getListings = async (): Promise<Listing[]> => {
+//   const res = await axios.get("/api/listings")
+//   return res.data
+// }
+
+// export const getListingById = async (id: string): Promise<{ data: Listing }> => {
+//   const res = await axios.get(`/api/listings/${id}`)
+//   return res.data
+// }
+
 import axios from "axios"
 import { Listing } from "../types/listing"
 
@@ -7,7 +20,7 @@ export const getListings = async (): Promise<Listing[]> => {
   return res.data
 }
 
-export const getListingById = async (id: string): Promise<{ data: Listing }> => {
+export const getListingById = async (id: string): Promise<Listing> => {
   const res = await axios.get(`/api/listings/${id}`)
   return res.data
 }
