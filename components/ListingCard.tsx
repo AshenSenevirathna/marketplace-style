@@ -229,7 +229,7 @@ export default function ListingCard() {
       const res = await axios.get(`${API}/api/lists/travel`);
       setExperiences(res.data);
     } catch (error) {
-      console.error(error);
+      console.error("Fetch error:", error);
     }
   }
 
@@ -246,74 +246,100 @@ export default function ListingCard() {
     }
   }
 
+  // Define the single item to show
   const currentItem = experiences[currentPage - 1];
   const totalPages = experiences.length;
 
-  if (!currentItem) return <div className="p-10 text-center">Loading...</div>;
+  if (!currentItem) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-slate-400 font-medium">
+        Loading experience...
+      </div>
+    );
+  }
 
   return (
-    <section className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
-      <div className="max-w-2xl w-full border border-slate-100 rounded-3xl overflow-hidden shadow-sm">
-        
-        {/* Image Container */}
-        <div className="relative aspect-video">
-          <img 
-            src={currentItem.images[0]} 
-            className="w-full h-full object-cover" 
-            alt={currentItem.title} 
-          />
+    <section className="min-h-screen bg-white flex flex-col items-center justify-center p-6 md:p-12">
+      <div className="max-w-2xl w-full">
+        {/* Single Cohesive Card */}
+        <div className="bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+          
+          {/* Visual Header */}
+          <div className="relative aspect-[16/10] overflow-hidden">
+            <img 
+              src={currentItem.images[0]} 
+              className="w-full h-full object-cover" 
+              alt={currentItem.title} 
+            />
+            <button
+              onClick={() => likePost(currentItem._id)}
+              className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-sm hover:scale-110 transition-all"
+            >
+              <Heart 
+                size={20} 
+                className={currentItem.likes?.length > 0 ? "fill-red-500 text-red-500" : "text-slate-400"} 
+              />
+            </button>
+          </div>
+
+          {/* Content Body */}
+          <div className="p-8 md:p-12">
+            <div className="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-[0.2em] mb-4">
+              <MapPin size={14} /> {currentItem.location}
+            </div>
+            
+            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
+              {currentItem.title}
+            </h1>
+            
+            <p className="text-slate-500 text-lg leading-relaxed mb-10 font-light">
+              {currentItem.description}
+            </p>
+
+            {/* Author & Pricing Row */}
+            <div className="flex items-center justify-between pt-8 border-t border-slate-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white">
+                  <User size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Posted by</p>
+                  <p className="text-sm font-bold text-slate-700">{currentItem.userName}</p>
+                </div>
+              </div>
+              
+              {currentItem.price && (
+                <div className="text-right">
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Estimate</p>
+                  <p className="text-2xl font-black text-slate-900">${currentItem.price}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Minimal Navigation Controls */}
+        <div className="flex items-center justify-between mt-10 px-4">
           <button
-            onClick={() => likePost(currentItem._id)}
-            className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow-sm hover:scale-110 transition-transform"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => prev - 1)}
+            className="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 disabled:opacity-20 transition-all"
           >
-            <Heart size={20} className={currentItem.likes?.length > 0 ? "fill-red-500 text-red-500" : "text-slate-400"} />
+            <ChevronLeft size={20} /> Prev
+          </button>
+
+          <span className="text-xs font-black tracking-[0.3em] text-slate-300 uppercase">
+            {currentPage} <span className="text-slate-100">/</span> {totalPages}
+          </span>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => prev + 1)}
+            className="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 disabled:opacity-20 transition-all"
+          >
+            Next <ChevronRight size={20} />
           </button>
         </div>
-
-        {/* Content */}
-        <div className="p-8">
-          <div className="flex items-center gap-1 text-blue-600 text-xs font-bold uppercase tracking-widest mb-3">
-            <MapPin size={14} /> {currentItem.location}
-          </div>
-          
-          <h1 className="text-3xl font-bold text-slate-900 mb-4">{currentItem.title}</h1>
-          <p className="text-slate-500 leading-relaxed mb-8">{currentItem.description}</p>
-
-          <div className="flex items-center justify-between pt-6 border-t border-slate-50">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                <User size={16} />
-              </div>
-              <span className="text-sm font-medium text-slate-700">{currentItem.userName}</span>
-            </div>
-            {currentItem.price && (
-              <span className="text-2xl font-black text-slate-900">${currentItem.price}</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="flex items-center mt-8 gap-6">
-        <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage(prev => prev - 1)}
-          className="p-3 rounded-full hover:bg-slate-100 disabled:opacity-20 transition-colors"
-        >
-          <ChevronLeft size={24} />
-        </button>
-
-        <span className="text-sm font-bold text-slate-400">
-          {currentPage} / {totalPages}
-        </span>
-
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage(prev => prev + 1)}
-          className="p-3 rounded-full hover:bg-slate-100 disabled:opacity-20 transition-colors"
-        >
-          <ChevronRight size={24} />
-        </button>
       </div>
     </section>
   );
