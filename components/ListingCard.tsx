@@ -1,7 +1,181 @@
+// // "use client";
+
+// // import { useEffect, useState } from "react";
+// // import axios from "axios";
+
+// // interface Experience {
+// //   _id: string;
+// //   title: string;
+// //   location: string;
+// //   description: string;
+// //   price?: number;
+// //   images: string[];
+// //   userName: string;
+// //   likes: string[];
+// //   createdAt: string;
+// // }
+
+// // export default function ListingCard() {
+// //   const [experiences, setExperiences] = useState<Experience[]>([]);
+// //   const [currentPage, setCurrentPage] = useState(1);
+// //   const [selectedListing, setSelectedListing] = useState<Experience | null>(null);
+// //   const [openDialog, setOpenDialog] = useState(false);
+
+// //   const itemsPerPage = 3;
+// //   const API = process.env.NEXT_PUBLIC_API_URL;
+
+// //   useEffect(() => {
+// //     fetchExperiences();
+// //   }, []);
+
+// //   // Fetch all experiences (all users)
+// //   async function fetchExperiences() {
+// //     try {
+// //       const res = await axios.get(`${API}/api/lists/travel`);
+// //       setExperiences(res.data);
+// //     } catch (error) {
+// //       console.error("Failed to fetch experiences:", error);
+// //     }
+// //   }
+
+// //   // Format time ago
+// //   function timeAgo(date: string) {
+// //     const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+// //     const intervals: any = { year: 31536000, month: 2592000, day: 86400, hour: 3600, minute: 60 };
+// //     for (const key in intervals) {
+// //       const interval = Math.floor(seconds / intervals[key]);
+// //       if (interval >= 1) return `Posted ${interval} ${key}${interval > 1 ? "s" : ""} ago`;
+// //     }
+// //     return "Posted just now";
+// //   }
+
+// //   function openListing(exp: Experience) {
+// //     setSelectedListing(exp);
+// //     setOpenDialog(true);
+// //   }
+
+// //   function closeDialog() {
+// //     setOpenDialog(false);
+// //     setSelectedListing(null);
+// //   }
+
+// //   // Like a post
+// //   async function likePost(id: string) {
+// //     try {
+// //       const userId = localStorage.getItem("userId");
+// //       if (!userId) {
+// //         alert("Please login first");
+// //         return;
+// //       }
+
+// //       const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
+
+// //       // Update likes for that experience
+// //       setExperiences(prev =>
+// //         prev.map(exp => (exp._id === id ? { ...exp, likes: res.data.likes } : exp))
+// //       );
+// //     } catch (err) {
+// //       console.error("Failed to like post:", err);
+// //     }
+// //   }
+
+// //   // Pagination logic
+// //   const indexOfLastItem = currentPage * itemsPerPage;
+// //   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+// //   const currentExperiences = experiences.slice(indexOfFirstItem, indexOfLastItem);
+// //   const totalPages = Math.ceil(experiences.length / itemsPerPage);
+
+// //   return (
+// //     <section className="min-h-screen bg-gray-50 py-16 px-6">
+// //       <div className="max-w-6xl mx-auto">
+// //         <h1 className="text-3xl font-bold text-blue-900 mb-10">Travelers Experiences</h1>
+
+// //         <div className="grid md:grid-cols-3 gap-8">
+// //           {currentExperiences.map(exp => (
+// //             <div
+// //               key={exp._id}
+// //               onClick={() => openListing(exp)}
+// //               className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition"
+// //             >
+// //               <img src={exp.images[0]} className="w-full h-48 object-cover" />
+// //               <div className="p-5">
+// //                 <h2 className="text-xl font-semibold text-gray-800">{exp.title}</h2>
+// //                 <p className="text-gray-500 text-sm">{exp.location}</p>
+// //                 <p className="text-sm text-gray-400 mt-1">By {exp.userName}</p>
+// //                 <p className="text-xs text-gray-400">{timeAgo(exp.createdAt)}</p>
+// //                 <p className="text-gray-600 mt-3 line-clamp-2">{exp.description}</p>
+// //                 {exp.price && <p className="text-yellow-500 font-bold mt-3">${exp.price}</p>}
+
+// //                 <button
+// //                   onClick={e => {
+// //                     e.stopPropagation();
+// //                     likePost(exp._id);
+// //                   }}
+// //                   className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+// //                 >
+// //                   ❤️ {exp.likes?.length || 0}
+// //                 </button>
+// //               </div>
+// //             </div>
+// //           ))}
+// //         </div>
+
+// //         {/* Pagination */}
+// //         <div className="flex justify-center items-center mt-8 gap-4">
+// //           <button
+// //             onClick={() => setCurrentPage(currentPage - 1)}
+// //             disabled={currentPage === 1}
+// //             className="px-4 py-2 bg-yellow-400 text-black rounded disabled:opacity-50"
+// //           >
+// //             Prev
+// //           </button>
+
+// //           <span>
+// //             Page {currentPage} of {totalPages}
+// //           </span>
+
+// //           <button
+// //             onClick={() => setCurrentPage(currentPage + 1)}
+// //             disabled={currentPage === totalPages}
+// //             className="px-4 py-2 bg-yellow-400 text-black rounded disabled:opacity-50"
+// //           >
+// //             Next
+// //           </button>
+// //         </div>
+// //       </div>
+
+// //       {/* Dialog */}
+// //       {openDialog && selectedListing && (
+// //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+// //           <div className="bg-white rounded-xl w-[500px] p-6 relative">
+// //             <button onClick={closeDialog} className="absolute top-3 right-3 text-gray-500 text-xl">
+// //               ✕
+// //             </button>
+
+// //             <img
+// //               src={selectedListing.images[0]}
+// //               className="w-full h-60 object-cover rounded-lg"
+// //             />
+
+// //             <h2 className="text-2xl font-bold mt-4">{selectedListing.title}</h2>
+// //             <p className="text-gray-500 mt-1">📍 {selectedListing.location}</p>
+// //             <p className="text-gray-600 mt-3">{selectedListing.description}</p>
+// //             {selectedListing.price && (
+// //               <p className="text-yellow-500 font-bold mt-3">${selectedListing.price}</p>
+// //             )}
+// //             <p className="text-gray-400 mt-2">Created by {selectedListing.userName}</p>
+// //           </div>
+// //         </div>
+// //       )}
+// //     </section>
+// //   );
+// // }
+
 // "use client";
 
 // import { useEffect, useState } from "react";
 // import axios from "axios";
+// import { MapPin, Heart, ChevronLeft, ChevronRight, X, User } from "lucide-react";
 
 // interface Experience {
 //   _id: string;
@@ -28,7 +202,6 @@
 //     fetchExperiences();
 //   }, []);
 
-//   // Fetch all experiences (all users)
 //   async function fetchExperiences() {
 //     try {
 //       const res = await axios.get(`${API}/api/lists/travel`);
@@ -38,15 +211,14 @@
 //     }
 //   }
 
-//   // Format time ago
 //   function timeAgo(date: string) {
 //     const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
 //     const intervals: any = { year: 31536000, month: 2592000, day: 86400, hour: 3600, minute: 60 };
 //     for (const key in intervals) {
 //       const interval = Math.floor(seconds / intervals[key]);
-//       if (interval >= 1) return `Posted ${interval} ${key}${interval > 1 ? "s" : ""} ago`;
+//       if (interval >= 1) return `${interval}${key[0]} ago`;
 //     }
-//     return "Posted just now";
+//     return "just now";
 //   }
 
 //   function openListing(exp: Experience) {
@@ -59,7 +231,6 @@
 //     setSelectedListing(null);
 //   }
 
-//   // Like a post
 //   async function likePost(id: string) {
 //     try {
 //       const userId = localStorage.getItem("userId");
@@ -67,10 +238,7 @@
 //         alert("Please login first");
 //         return;
 //       }
-
 //       const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
-
-//       // Update likes for that experience
 //       setExperiences(prev =>
 //         prev.map(exp => (exp._id === id ? { ...exp, likes: res.data.likes } : exp))
 //       );
@@ -79,91 +247,118 @@
 //     }
 //   }
 
-//   // Pagination logic
 //   const indexOfLastItem = currentPage * itemsPerPage;
 //   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 //   const currentExperiences = experiences.slice(indexOfFirstItem, indexOfLastItem);
 //   const totalPages = Math.ceil(experiences.length / itemsPerPage);
 
 //   return (
-//     <section className="min-h-screen bg-gray-50 py-16 px-6">
+//     <section className="min-h-screen bg-white py-20 px-6">
 //       <div className="max-w-6xl mx-auto">
-//         <h1 className="text-3xl font-bold text-blue-900 mb-10">Travelers Experiences</h1>
+//         <div className="mb-16 border-l-4 border-blue-600 pl-6">
+//           <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Traveler Experiences</h1>
+//           <p className="text-slate-500 mt-2 font-medium">Authentic stories shared by our community.</p>
+//         </div>
 
-//         <div className="grid md:grid-cols-3 gap-8">
+//         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 //           {currentExperiences.map(exp => (
 //             <div
 //               key={exp._id}
 //               onClick={() => openListing(exp)}
-//               className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition"
+//               className="group cursor-pointer"
 //             >
-//               <img src={exp.images[0]} className="w-full h-48 object-cover" />
-//               <div className="p-5">
-//                 <h2 className="text-xl font-semibold text-gray-800">{exp.title}</h2>
-//                 <p className="text-gray-500 text-sm">{exp.location}</p>
-//                 <p className="text-sm text-gray-400 mt-1">By {exp.userName}</p>
-//                 <p className="text-xs text-gray-400">{timeAgo(exp.createdAt)}</p>
-//                 <p className="text-gray-600 mt-3 line-clamp-2">{exp.description}</p>
-//                 {exp.price && <p className="text-yellow-500 font-bold mt-3">${exp.price}</p>}
-
+//               <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-slate-100">
+//                 <img 
+//                   src={exp.images[0]} 
+//                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+//                   alt={exp.title}
+//                 />
 //                 <button
 //                   onClick={e => {
 //                     e.stopPropagation();
 //                     likePost(exp._id);
 //                   }}
-//                   className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+//                   className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur rounded-full shadow-sm hover:text-red-500 transition-colors flex items-center gap-1.5"
 //                 >
-//                   ❤️ {exp.likes?.length || 0}
+//                   <Heart size={18} fill={exp.likes?.length > 0 ? "currentColor" : "none"} className={exp.likes?.length > 0 ? "text-red-500" : "text-slate-400"} />
+//                   <span className="text-xs font-bold text-slate-700">{exp.likes?.length || 0}</span>
 //                 </button>
+//               </div>
+
+//               <div className="mt-5 space-y-2">
+//                 <div className="flex items-center gap-1.5 text-blue-600">
+//                   <MapPin size={14} />
+//                   <span className="text-xs font-bold uppercase tracking-wider">{exp.location}</span>
+//                 </div>
+//                 <h2 className="text-xl font-bold text-slate-800 line-clamp-1">{exp.title}</h2>
+//                 <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed">{exp.description}</p>
+
+//                 <div className="pt-3 flex items-center justify-between border-t border-slate-100">
+//                   <div className="flex items-center gap-2">
+//                     <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+//                       <User size={14} />
+//                     </div>
+//                     <span className="text-xs font-semibold text-slate-600">{exp.userName}</span>
+//                   </div>
+//                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{timeAgo(exp.createdAt)}</span>
+//                 </div>
 //               </div>
 //             </div>
 //           ))}
 //         </div>
 
-//         {/* Pagination */}
-//         <div className="flex justify-center items-center mt-8 gap-4">
+//         <div className="flex justify-center items-center mt-20 gap-8">
 //           <button
 //             onClick={() => setCurrentPage(currentPage - 1)}
 //             disabled={currentPage === 1}
-//             className="px-4 py-2 bg-yellow-400 text-black rounded disabled:opacity-50"
+//             className="p-2 border border-slate-200 rounded-full hover:bg-slate-50 disabled:opacity-30 transition-all"
 //           >
-//             Prev
+//             <ChevronLeft size={20} />
 //           </button>
 
-//           <span>
-//             Page {currentPage} of {totalPages}
+//           <span className="text-sm font-bold tracking-widest text-slate-400">
+//             {currentPage} / {totalPages}
 //           </span>
 
 //           <button
 //             onClick={() => setCurrentPage(currentPage + 1)}
 //             disabled={currentPage === totalPages}
-//             className="px-4 py-2 bg-yellow-400 text-black rounded disabled:opacity-50"
+//             className="p-2 border border-slate-200 rounded-full hover:bg-slate-50 disabled:opacity-30 transition-all"
 //           >
-//             Next
+//             <ChevronRight size={20} />
 //           </button>
 //         </div>
 //       </div>
 
-//       {/* Dialog */}
 //       {openDialog && selectedListing && (
-//         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//           <div className="bg-white rounded-xl w-[500px] p-6 relative">
-//             <button onClick={closeDialog} className="absolute top-3 right-3 text-gray-500 text-xl">
-//               ✕
+//         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
+//           <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+//             <button 
+//               onClick={closeDialog} 
+//               className="absolute top-4 right-4 p-2 bg-white/80 rounded-full text-slate-500 hover:text-slate-900 z-10"
+//             >
+//               <X size={20} />
 //             </button>
 
-//             <img
-//               src={selectedListing.images[0]}
-//               className="w-full h-60 object-cover rounded-lg"
-//             />
+//             <div className="grid md:grid-cols-2">
+//               <img
+//                 src={selectedListing.images[0]}
+//                 className="w-full h-full object-cover min-h-[300px]"
+//                 alt={selectedListing.title}
+//               />
+//               <div className="p-8 flex flex-col justify-center">
+//                 <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">{selectedListing.location}</p>
+//                 <h2 className="text-3xl font-black text-slate-900 leading-tight mb-4">{selectedListing.title}</h2>
+//                 <p className="text-slate-600 text-sm leading-relaxed mb-6 italic">"{selectedListing.description}"</p>
 
-//             <h2 className="text-2xl font-bold mt-4">{selectedListing.title}</h2>
-//             <p className="text-gray-500 mt-1">📍 {selectedListing.location}</p>
-//             <p className="text-gray-600 mt-3">{selectedListing.description}</p>
-//             {selectedListing.price && (
-//               <p className="text-yellow-500 font-bold mt-3">${selectedListing.price}</p>
-//             )}
-//             <p className="text-gray-400 mt-2">Created by {selectedListing.userName}</p>
+//                 <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+//                   <p className="text-xs font-medium text-slate-400">Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span></p>
+//                   {selectedListing.price && (
+//                     <p className="text-xl font-black text-slate-900">${selectedListing.price}</p>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
 //           </div>
 //         </div>
 //       )}
@@ -175,7 +370,6 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapPin, Heart, ChevronLeft, ChevronRight, X, User } from "lucide-react";
 
 interface Experience {
   _id: string;
@@ -202,6 +396,7 @@ export default function ListingCard() {
     fetchExperiences();
   }, []);
 
+  // Fetch all experiences (all users)
   async function fetchExperiences() {
     try {
       const res = await axios.get(`${API}/api/lists/travel`);
@@ -211,14 +406,15 @@ export default function ListingCard() {
     }
   }
 
+  // Format time ago
   function timeAgo(date: string) {
     const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
     const intervals: any = { year: 31536000, month: 2592000, day: 86400, hour: 3600, minute: 60 };
     for (const key in intervals) {
       const interval = Math.floor(seconds / intervals[key]);
-      if (interval >= 1) return `${interval}${key[0]} ago`;
+      if (interval >= 1) return `Posted ${interval} ${key}${interval > 1 ? "s" : ""} ago`;
     }
-    return "just now";
+    return "Posted just now";
   }
 
   function openListing(exp: Experience) {
@@ -231,6 +427,7 @@ export default function ListingCard() {
     setSelectedListing(null);
   }
 
+  // Like a post
   async function likePost(id: string) {
     try {
       const userId = localStorage.getItem("userId");
@@ -238,7 +435,10 @@ export default function ListingCard() {
         alert("Please login first");
         return;
       }
+
       const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
+
+      // Update likes for that experience
       setExperiences(prev =>
         prev.map(exp => (exp._id === id ? { ...exp, likes: res.data.likes } : exp))
       );
@@ -247,118 +447,91 @@ export default function ListingCard() {
     }
   }
 
+  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentExperiences = experiences.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(experiences.length / itemsPerPage);
 
   return (
-    <section className="min-h-screen bg-white py-20 px-6">
+    <section className="min-h-screen bg-gray-50 py-16 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-16 border-l-4 border-blue-600 pl-6">
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Traveler Experiences</h1>
-          <p className="text-slate-500 mt-2 font-medium">Authentic stories shared by our community.</p>
-        </div>
+        <h1 className="text-3xl font-bold text-blue-900 mb-10">Travelers Experiences</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid md:grid-cols-3 gap-8">
           {currentExperiences.map(exp => (
             <div
               key={exp._id}
               onClick={() => openListing(exp)}
-              className="group cursor-pointer"
+              className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition"
             >
-              <div className="relative overflow-hidden rounded-2xl aspect-[4/3] bg-slate-100">
-                <img 
-                  src={exp.images[0]} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                  alt={exp.title}
-                />
+              <img src={exp.images[0]} className="w-full h-48 object-cover" />
+              <div className="p-5">
+                <h2 className="text-xl font-semibold text-gray-800">{exp.title}</h2>
+                <p className="text-gray-500 text-sm">{exp.location}</p>
+                <p className="text-sm text-gray-400 mt-1">By {exp.userName}</p>
+                <p className="text-xs text-gray-400">{timeAgo(exp.createdAt)}</p>
+                <p className="text-gray-600 mt-3 line-clamp-2">{exp.description}</p>
+                {exp.price && <p className="text-yellow-500 font-bold mt-3">${exp.price}</p>}
+
                 <button
                   onClick={e => {
                     e.stopPropagation();
                     likePost(exp._id);
                   }}
-                  className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur rounded-full shadow-sm hover:text-red-500 transition-colors flex items-center gap-1.5"
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  <Heart size={18} fill={exp.likes?.length > 0 ? "currentColor" : "none"} className={exp.likes?.length > 0 ? "text-red-500" : "text-slate-400"} />
-                  <span className="text-xs font-bold text-slate-700">{exp.likes?.length || 0}</span>
+                  ❤️ {exp.likes?.length || 0}
                 </button>
-              </div>
-
-              <div className="mt-5 space-y-2">
-                <div className="flex items-center gap-1.5 text-blue-600">
-                  <MapPin size={14} />
-                  <span className="text-xs font-bold uppercase tracking-wider">{exp.location}</span>
-                </div>
-                <h2 className="text-xl font-bold text-slate-800 line-clamp-1">{exp.title}</h2>
-                <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed">{exp.description}</p>
-                
-                <div className="pt-3 flex items-center justify-between border-t border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                      <User size={14} />
-                    </div>
-                    <span className="text-xs font-semibold text-slate-600">{exp.userName}</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{timeAgo(exp.createdAt)}</span>
-                </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="flex justify-center items-center mt-20 gap-8">
+        {/* Pagination */}
+        <div className="flex justify-center items-center mt-8 gap-4">
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2 border border-slate-200 rounded-full hover:bg-slate-50 disabled:opacity-30 transition-all"
+            className="px-4 py-2 bg-yellow-400 text-black rounded disabled:opacity-50"
           >
-            <ChevronLeft size={20} />
+            Prev
           </button>
 
-          <span className="text-sm font-bold tracking-widest text-slate-400">
-            {currentPage} / {totalPages}
+          <span>
+            Page {currentPage} of {totalPages}
           </span>
 
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2 border border-slate-200 rounded-full hover:bg-slate-50 disabled:opacity-30 transition-all"
+            className="px-4 py-2 bg-yellow-400 text-black rounded disabled:opacity-50"
           >
-            <ChevronRight size={20} />
+            Next
           </button>
         </div>
       </div>
 
+      {/* Dialog */}
       {openDialog && selectedListing && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
-            <button 
-              onClick={closeDialog} 
-              className="absolute top-4 right-4 p-2 bg-white/80 rounded-full text-slate-500 hover:text-slate-900 z-10"
-            >
-              <X size={20} />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl w-[500px] p-6 relative">
+            <button onClick={closeDialog} className="absolute top-3 right-3 text-gray-500 text-xl">
+              ✕
             </button>
 
-            <div className="grid md:grid-cols-2">
-              <img
-                src={selectedListing.images[0]}
-                className="w-full h-full object-cover min-h-[300px]"
-                alt={selectedListing.title}
-              />
-              <div className="p-8 flex flex-col justify-center">
-                <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">{selectedListing.location}</p>
-                <h2 className="text-3xl font-black text-slate-900 leading-tight mb-4">{selectedListing.title}</h2>
-                <p className="text-slate-600 text-sm leading-relaxed mb-6 italic">"{selectedListing.description}"</p>
-                
-                <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                  <p className="text-xs font-medium text-slate-400">Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span></p>
-                  {selectedListing.price && (
-                    <p className="text-xl font-black text-slate-900">${selectedListing.price}</p>
-                  )}
-                </div>
-              </div>
-            </div>
+            <img
+              src={selectedListing.images[0]}
+              className="w-full h-60 object-cover rounded-lg"
+            />
+
+            <h2 className="text-2xl font-bold mt-4">{selectedListing.title}</h2>
+            <p className="text-gray-500 mt-1">📍 {selectedListing.location}</p>
+            <p className="text-gray-600 mt-3">{selectedListing.description}</p>
+            {selectedListing.price && (
+              <p className="text-yellow-500 font-bold mt-3">${selectedListing.price}</p>
+            )}
+            <p className="text-gray-400 mt-2">Created by {selectedListing.userName}</p>
           </div>
         </div>
       )}
