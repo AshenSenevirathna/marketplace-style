@@ -419,7 +419,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Heart, ChevronLeft, ChevronRight, X, User, Clock } from "lucide-react";
+import { MapPin, Heart, ChevronLeft, ChevronRight, X, User, ArrowRight } from "lucide-react";
 
 interface Experience {
   _id: string;
@@ -437,10 +437,7 @@ export default function ListingCard() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedListing, setSelectedListing] = useState<Experience | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
 
-  // Strictly show one at a time
-  const itemsPerPage = 1;
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -456,192 +453,141 @@ export default function ListingCard() {
     }
   }
 
-  function timeAgo(date: string) {
-    const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
-    const intervals: any = { year: 31536000, month: 2592000, day: 86400, hour: 3600, minute: 60 };
-    for (const key in intervals) {
-      const interval = Math.floor(seconds / intervals[key]);
-      if (interval >= 1) return `${interval}${key[0]} ago`;
-    }
-    return "now";
-  }
-
   async function likePost(id: string) {
     try {
       const userId = localStorage.getItem("userId");
-      if (!userId) {
-        alert("Please login first");
-        return;
-      }
+      if (!userId) return alert("Please login first");
       const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
       setExperiences(prev =>
         prev.map(exp => (exp._id === id ? { ...exp, likes: res.data.likes } : exp))
       );
-    } catch (err) {
-      console.error("Failed to like post:", err);
-    }
+    } catch (err) { console.error(err); }
   }
 
-  // Slice logic for only the single item
   const currentItem = experiences[currentPage - 1];
   const totalPages = experiences.length;
 
   return (
-    <section className="min-h-screen bg-white py-20 px-6 flex flex-col items-center">
-      <div className="max-w-4xl w-full mx-auto">
-        
-        {/* Header - Simple & Clean */}
-        <div className="mb-16 text-center">
-          <span className="text-blue-600 font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">
-            Spotlight Story
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
-            Traveler Experiences
-          </h1>
-          <div className="h-1 w-20 bg-blue-600 mx-auto mt-6 rounded-full" />
-        </div>
-
-        {/* Spotlight Card with Animation */}
-        <div className="relative min-h-[500px]">
-          <AnimatePresence mode="wait">
-            {currentItem ? (
-              <motion.div
-                key={currentItem._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="w-full max-w-2xl mx-auto"
-              >
-                {/* Image Section */}
-                <div 
-                  onClick={() => { setSelectedListing(currentItem); setOpenDialog(true); }}
-                  className="relative overflow-hidden rounded-[2.5rem] aspect-video shadow-2xl shadow-blue-900/10 cursor-pointer group"
-                >
-                  <img 
-                    src={currentItem.images[0]} 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                    alt={currentItem.title}
-                  />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
-                  
-                  {/* Floating Price Tag */}
-                  {currentItem.price && (
-                    <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md px-5 py-2 rounded-2xl shadow-xl font-black text-slate-900">
-                      ${currentItem.price}
-                    </div>
-                  )}
-
-                  {/* Heart Button */}
-                  <button
-                    onClick={e => {
-                      e.stopPropagation();
-                      likePost(currentItem._id);
-                    }}
-                    className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur rounded-full shadow-lg hover:scale-110 transition-all text-slate-400 active:text-red-500"
-                  >
-                    <Heart 
-                      size={20} 
-                      className={currentItem.likes?.length > 0 ? "text-red-500 fill-red-500" : ""} 
-                    />
-                  </button>
+    <section className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-10">
+      <div className="max-w-6xl w-full">
+        <AnimatePresence mode="wait">
+          {currentItem ? (
+            <motion.div
+              key={currentItem._id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="relative bg-white rounded-[3rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row min-h-[600px]"
+            >
+              {/* Image Side (Left) */}
+              <div className="lg:w-1/2 relative h-[350px] lg:h-auto overflow-hidden group">
+                <img
+                  src={currentItem.images[0]}
+                  className="w-full h-full object-cover transition-transform duration-[2s] scale-105 group-hover:scale-100"
+                  alt={currentItem.title}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:hidden" />
+                
+                {/* Floating Meta */}
+                <div className="absolute top-8 left-8 flex gap-3">
+                  <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm">
+                    <p className="text-[10px] font-black uppercase text-blue-600 tracking-tighter">Experience</p>
+                    <p className="text-sm font-bold text-slate-900">#{currentPage} of {totalPages}</p>
+                  </div>
                 </div>
 
-                {/* Content Section */}
-                <div className="mt-10 space-y-4 px-4">
-                  <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-widest">
-                    <MapPin size={14} /> {currentItem.location}
+                <button
+                  onClick={() => likePost(currentItem._id)}
+                  className="absolute top-8 right-8 w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-90"
+                >
+                  <Heart size={20} className={currentItem.likes?.length > 0 ? "fill-red-500 text-red-500" : "text-slate-400"} />
+                </button>
+              </div>
+
+              {/* Content Side (Right) */}
+              <div className="lg:w-1/2 p-8 md:p-16 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-[0.2em] mb-6">
+                    <MapPin size={16} /> {currentItem.location}
                   </div>
                   
-                  <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
+                  <h1 className="text-4xl md:text-6xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tighter">
                     {currentItem.title}
-                  </h2>
+                  </h1>
                   
-                  <p className="text-slate-500 text-lg leading-relaxed italic font-light">
+                  <p className="text-slate-500 text-lg md:text-xl leading-relaxed font-light italic border-l-2 border-slate-100 pl-6 mb-8">
                     "{currentItem.description}"
                   </p>
 
-                  <div className="pt-8 flex items-center justify-between border-t border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white">
-                        <User size={18} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase">Curated by</p>
-                        <p className="text-sm font-bold text-slate-800">{currentItem.userName}</p>
-                      </div>
+                  <div className="flex items-center gap-4 mb-10">
+                    <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-white ring-4 ring-slate-50">
+                      <User size={20} />
                     </div>
-                    <div className="flex items-center gap-1.5 text-slate-400 text-xs font-bold">
-                      <Clock size={14} /> {timeAgo(currentItem.createdAt)}
+                    <div>
+                      <p className="text-xs text-slate-400 font-bold uppercase">Shared by</p>
+                      <p className="text-base font-bold text-slate-800">{currentItem.userName}</p>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            ) : (
-              <div className="flex justify-center items-center h-full text-slate-300 italic">
-                No experiences found.
-              </div>
-            )}
-          </AnimatePresence>
-        </div>
 
-        {/* Minimal Navigation */}
-        <div className="flex justify-center items-center mt-16 gap-12">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-10 transition-all group"
-          >
-            <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Back
-          </button>
-
-          <span className="text-sm font-black text-slate-900 tracking-[0.4em]">
-            {currentPage} <span className="text-slate-200">/</span> {totalPages}
-          </span>
-
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-10 transition-all group"
-          >
-            Next <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
-      </div>
-
-      {/* Modern Modal - Reusing the same refined style */}
-      <AnimatePresence>
-        {openDialog && selectedListing && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-[3rem] w-full max-w-2xl overflow-hidden relative shadow-2xl"
-            >
-              <button 
-                onClick={() => setOpenDialog(false)} 
-                className="absolute top-6 right-6 p-2 bg-white/90 rounded-full text-slate-900 z-10 hover:rotate-90 transition-transform"
-              >
-                <X size={20} />
-              </button>
-
-              <div className="grid md:grid-cols-2">
-                <img src={selectedListing.images[0]} className="w-full h-full object-cover min-h-[350px]" alt="Modal view" />
-                <div className="p-10 flex flex-col justify-center">
-                  <p className="text-blue-600 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">{selectedListing.location}</p>
-                  <h2 className="text-3xl font-black text-slate-900 mb-4 leading-tight">{selectedListing.title}</h2>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-6 italic">"{selectedListing.description}"</p>
-                  <div className="pt-6 border-t border-slate-100 flex justify-between items-center">
-                    <span className="text-xs font-bold text-slate-400 uppercase">Author: {selectedListing.userName}</span>
-                    {selectedListing.price && <span className="text-xl font-black text-blue-600">${selectedListing.price}</span>}
+                {/* Footer Controls (Integrated) */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-slate-50">
+                  <div className="flex gap-4">
+                    <button
+                      disabled={currentPage === 1}
+                      onClick={() => setCurrentPage(prev => prev - 1)}
+                      className="w-14 h-14 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white hover:border-slate-900 disabled:opacity-10 transition-all"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    <button
+                      disabled={currentPage === totalPages}
+                      onClick={() => setCurrentPage(prev => prev + 1)}
+                      className="w-14 h-14 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-900 hover:text-white hover:border-slate-900 disabled:opacity-10 transition-all"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
                   </div>
+
+                  <button 
+                    onClick={() => setSelectedListing(currentItem)}
+                    className="w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20"
+                  >
+                    View Details <ArrowRight size={18} />
+                  </button>
                 </div>
               </div>
             </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+          ) : (
+            <div className="text-slate-300 font-bold">Loading experiences...</div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Simplified Detail Modal Overlay */}
+      {selectedListing && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-xl z-[100] flex items-center justify-center p-6" onClick={() => setSelectedListing(null)}>
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }} 
+            animate={{ y: 0, opacity: 1 }} 
+            className="bg-white rounded-[2.5rem] p-10 max-w-lg w-full relative"
+            onClick={e => e.stopPropagation()}
+          >
+            <button onClick={() => setSelectedListing(null)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-900 transition-colors">
+              <X size={24} />
+            </button>
+            <h2 className="text-3xl font-black mb-4">{selectedListing.title}</h2>
+            <p className="text-slate-600 leading-relaxed mb-6">{selectedListing.description}</p>
+            {selectedListing.price && (
+              <div className="bg-slate-50 p-6 rounded-2xl flex justify-between items-center">
+                <span className="font-bold text-slate-400 uppercase text-xs tracking-widest">Budget Suggestion</span>
+                <span className="text-3xl font-black text-blue-600">${selectedListing.price}</span>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }
