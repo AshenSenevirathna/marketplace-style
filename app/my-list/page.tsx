@@ -78,7 +78,7 @@ export default function MyListings() {
             </h1>
             <p className="text-slate-500 mt-2 font-light">Manage and update your published travel stories.</p>
           </div>
-          <Link href="/create-experience" className="flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-slate-200 active:scale-95">
+          <Link href="/create" className="flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-slate-200 active:scale-95">
             <FaPlus size={14} /> Add New
           </Link>
         </div>
