@@ -22,7 +22,7 @@ export default function ListingCard() {
   const [selectedListing, setSelectedListing] = useState<Experience | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const itemsPerPage = 3;
+  const itemsPerPage = 1;
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function ListingCard() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-16 border-l-4 border-blue-600 pl-6">
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">traveler Experiences</h1>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Traveler Experiences</h1>
           <p className="text-slate-500 mt-2 font-medium">Authentic stories shared by our community.</p>
         </div>
 
