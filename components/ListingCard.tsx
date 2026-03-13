@@ -197,11 +197,229 @@
 //   );
 // }
 
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { MapPin, Heart, ChevronLeft, ChevronRight, X, User } from "lucide-react";
+
+// interface Experience {
+//   _id: string;
+//   title: string;
+//   location: string;
+//   description: string;
+//   price?: number;
+//   images: string[];
+//   userName: string;
+//   likes: string[];
+//   createdAt: string;
+// }
+
+// export default function ListingCard() {
+//   const [experiences, setExperiences] = useState<Experience[]>([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [selectedListing, setSelectedListing] = useState<Experience | null>(null);
+//   const [openDialog, setOpenDialog] = useState(false);
+
+//   // Updated to 1 for single listing display
+//   const itemsPerPage = 1;
+//   const API = process.env.NEXT_PUBLIC_API_URL;
+
+//   useEffect(() => {
+//     fetchExperiences();
+//   }, []);
+
+//   async function fetchExperiences() {
+//     try {
+//       const res = await axios.get(`${API}/api/lists/travel`);
+//       setExperiences(res.data);
+//     } catch (error) {
+//       console.error("Failed to fetch experiences:", error);
+//     }
+//   }
+
+//   function timeAgo(date: string) {
+//     const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+//     const intervals: any = { year: 31536000, month: 2592000, day: 86400, hour: 3600, minute: 60 };
+//     for (const key in intervals) {
+//       const interval = Math.floor(seconds / intervals[key]);
+//       if (interval >= 1) return `${interval}${key[0]} ago`;
+//     }
+//     return "just now";
+//   }
+
+//   function openListing(exp: Experience) {
+//     setSelectedListing(exp);
+//     setOpenDialog(true);
+//   }
+
+//   function closeDialog() {
+//     setOpenDialog(false);
+//     setSelectedListing(null);
+//   }
+
+//   async function likePost(id: string) {
+//     try {
+//       const userId = localStorage.getItem("userId");
+//       if (!userId) {
+//         alert("Please login first");
+//         return;
+//       }
+//       const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
+//       setExperiences(prev =>
+//         prev.map(exp => (exp._id === id ? { ...exp, likes: res.data.likes } : exp))
+//       );
+//     } catch (err) {
+//       console.error("Failed to like post:", err);
+//     }
+//   }
+
+//   const indexOfLastItem = currentPage * itemsPerPage;
+//   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+//   const currentExperiences = experiences.slice(indexOfFirstItem, indexOfLastItem);
+//   const totalPages = Math.ceil(experiences.length / itemsPerPage);
+
+//   return (
+//     <section className="min-h-screen bg-white py-20 px-6 flex flex-col items-center">
+//       <div className="max-w-4xl w-full mx-auto">
+//         {/* Header */}
+//         <div className="mb-12 border-l-4 border-blue-600 pl-6">
+//           <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Traveler Experiences</h1>
+//           <p className="text-slate-500 mt-2 font-medium">Spotlight on local stories.</p>
+//         </div>
+
+//         {/* Centered Single Card Display */}
+//         <div className="flex justify-center">
+//           {currentExperiences.map(exp => (
+//             <div
+//               key={exp._id}
+//               onClick={() => openListing(exp)}
+//               className="group cursor-pointer w-full max-w-xl"
+//             >
+//               <div className="relative overflow-hidden rounded-3xl aspect-video md:aspect-[16/10] bg-slate-100 shadow-xl shadow-slate-200/50">
+//                 <img 
+//                   src={exp.images[0]} 
+//                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+//                   alt={exp.title}
+//                 />
+//                 <button
+//                   onClick={e => {
+//                     e.stopPropagation();
+//                     likePost(exp._id);
+//                   }}
+//                   className="absolute top-6 right-6 p-2.5 bg-white/90 backdrop-blur rounded-full shadow-lg hover:text-red-500 transition-all flex items-center gap-1.5"
+//                 >
+//                   <Heart size={20} fill={exp.likes?.length > 0 ? "currentColor" : "none"} className={exp.likes?.length > 0 ? "text-red-500" : "text-slate-400"} />
+//                   <span className="text-sm font-bold text-slate-700">{exp.likes?.length || 0}</span>
+//                 </button>
+//               </div>
+
+//               <div className="mt-8 space-y-4 text-center md:text-left">
+//                 <div className="flex items-center justify-center md:justify-start gap-1.5 text-blue-600">
+//                   <MapPin size={16} />
+//                   <span className="text-sm font-bold uppercase tracking-widest">{exp.location}</span>
+//                 </div>
+//                 <h2 className="text-3xl font-black text-slate-900 leading-tight">{exp.title}</h2>
+//                 <p className="text-slate-500 text-lg leading-relaxed">{exp.description}</p>
+                
+//                 <div className="pt-6 flex items-center justify-between border-t border-slate-100">
+//                   <div className="flex items-center gap-3">
+//                     <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
+//                       <User size={20} />
+//                     </div>
+//                     <div className="text-left">
+//                       <p className="text-xs text-slate-400 font-bold uppercase">Posted by</p>
+//                       <p className="text-sm font-bold text-slate-700">{exp.userName}</p>
+//                     </div>
+//                   </div>
+//                   <div className="text-right">
+//                     <span className="text-xs font-black text-slate-400 uppercase tracking-tighter bg-slate-50 px-3 py-1 rounded-full">
+//                       {timeAgo(exp.createdAt)}
+//                     </span>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Premium Navigation Controls */}
+//         <div className="flex justify-center items-center mt-16 gap-10">
+//           <button
+//             onClick={() => setCurrentPage(currentPage - 1)}
+//             disabled={currentPage === 1}
+//             className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all"
+//           >
+//             <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" /> Prev
+//           </button>
+
+//           <div className="h-8 w-[1px] bg-slate-200" />
+
+//           <span className="text-sm font-black tracking-[0.3em] text-slate-900">
+//             {currentPage} <span className="text-slate-300">/</span> {totalPages}
+//           </span>
+
+//           <div className="h-8 w-[1px] bg-slate-200" />
+
+//           <button
+//             onClick={() => setCurrentPage(currentPage + 1)}
+//             disabled={currentPage === totalPages}
+//             className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all"
+//           >
+//             Next <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
+//           </button>
+//         </div>
+//       </div>
+
+//       {/* Modal - Unchanged but ensures responsive premium look */}
+//       {openDialog && selectedListing && (
+//         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-6">
+//           <div className="bg-white rounded-[2rem] w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+//             <button 
+//               onClick={closeDialog} 
+//               className="absolute top-5 right-5 p-2 bg-white/90 rounded-full text-slate-500 hover:text-slate-900 z-10 shadow-md"
+//             >
+//               <X size={20} />
+//             </button>
+
+//             <div className="grid md:grid-cols-2">
+//               <img
+//                 src={selectedListing.images[0]}
+//                 className="w-full h-full object-cover min-h-[350px]"
+//                 alt={selectedListing.title}
+//               />
+//               <div className="p-10 flex flex-col justify-center">
+//                 <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-3">{selectedListing.location}</p>
+//                 <h2 className="text-3xl font-black text-slate-900 leading-tight mb-5">{selectedListing.title}</h2>
+//                 <p className="text-slate-600 text-base leading-relaxed mb-8 italic font-light">"{selectedListing.description}"</p>
+                
+//                 <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+//                   <div className="flex flex-col">
+//                     <span className="text-[10px] font-bold text-slate-400 uppercase">Contributor</span>
+//                     <span className="text-sm font-bold text-slate-900">{selectedListing.userName}</span>
+//                   </div>
+//                   {selectedListing.price && (
+//                     <div className="text-right">
+//                        <span className="text-[10px] font-bold text-slate-400 uppercase">Est. Price</span>
+//                        <p className="text-2xl font-black text-blue-600">${selectedListing.price}</p>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </section>
+//   );
+// }
+
 "use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapPin, Heart, ChevronLeft, ChevronRight, X, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MapPin, Heart, ChevronLeft, ChevronRight, X, User, Clock } from "lucide-react";
 
 interface Experience {
   _id: string;
@@ -221,7 +439,7 @@ export default function ListingCard() {
   const [selectedListing, setSelectedListing] = useState<Experience | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Updated to 1 for single listing display
+  // Strictly show one at a time
   const itemsPerPage = 1;
   const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -245,17 +463,7 @@ export default function ListingCard() {
       const interval = Math.floor(seconds / intervals[key]);
       if (interval >= 1) return `${interval}${key[0]} ago`;
     }
-    return "just now";
-  }
-
-  function openListing(exp: Experience) {
-    setSelectedListing(exp);
-    setOpenDialog(true);
-  }
-
-  function closeDialog() {
-    setOpenDialog(false);
-    setSelectedListing(null);
+    return "now";
   }
 
   async function likePost(id: string) {
@@ -274,142 +482,166 @@ export default function ListingCard() {
     }
   }
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentExperiences = experiences.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(experiences.length / itemsPerPage);
+  // Slice logic for only the single item
+  const currentItem = experiences[currentPage - 1];
+  const totalPages = experiences.length;
 
   return (
     <section className="min-h-screen bg-white py-20 px-6 flex flex-col items-center">
       <div className="max-w-4xl w-full mx-auto">
-        {/* Header */}
-        <div className="mb-12 border-l-4 border-blue-600 pl-6">
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Traveler Experiences</h1>
-          <p className="text-slate-500 mt-2 font-medium">Spotlight on local stories.</p>
+        
+        {/* Header - Simple & Clean */}
+        <div className="mb-16 text-center">
+          <span className="text-blue-600 font-bold uppercase tracking-[0.4em] text-[10px] mb-4 block">
+            Spotlight Story
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+            Traveler Experiences
+          </h1>
+          <div className="h-1 w-20 bg-blue-600 mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* Centered Single Card Display */}
-        <div className="flex justify-center">
-          {currentExperiences.map(exp => (
-            <div
-              key={exp._id}
-              onClick={() => openListing(exp)}
-              className="group cursor-pointer w-full max-w-xl"
-            >
-              <div className="relative overflow-hidden rounded-3xl aspect-video md:aspect-[16/10] bg-slate-100 shadow-xl shadow-slate-200/50">
-                <img 
-                  src={exp.images[0]} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                  alt={exp.title}
-                />
-                <button
-                  onClick={e => {
-                    e.stopPropagation();
-                    likePost(exp._id);
-                  }}
-                  className="absolute top-6 right-6 p-2.5 bg-white/90 backdrop-blur rounded-full shadow-lg hover:text-red-500 transition-all flex items-center gap-1.5"
+        {/* Spotlight Card with Animation */}
+        <div className="relative min-h-[500px]">
+          <AnimatePresence mode="wait">
+            {currentItem ? (
+              <motion.div
+                key={currentItem._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="w-full max-w-2xl mx-auto"
+              >
+                {/* Image Section */}
+                <div 
+                  onClick={() => { setSelectedListing(currentItem); setOpenDialog(true); }}
+                  className="relative overflow-hidden rounded-[2.5rem] aspect-video shadow-2xl shadow-blue-900/10 cursor-pointer group"
                 >
-                  <Heart size={20} fill={exp.likes?.length > 0 ? "currentColor" : "none"} className={exp.likes?.length > 0 ? "text-red-500" : "text-slate-400"} />
-                  <span className="text-sm font-bold text-slate-700">{exp.likes?.length || 0}</span>
-                </button>
-              </div>
+                  <img 
+                    src={currentItem.images[0]} 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                    alt={currentItem.title}
+                  />
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
+                  
+                  {/* Floating Price Tag */}
+                  {currentItem.price && (
+                    <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md px-5 py-2 rounded-2xl shadow-xl font-black text-slate-900">
+                      ${currentItem.price}
+                    </div>
+                  )}
 
-              <div className="mt-8 space-y-4 text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-1.5 text-blue-600">
-                  <MapPin size={16} />
-                  <span className="text-sm font-bold uppercase tracking-widest">{exp.location}</span>
+                  {/* Heart Button */}
+                  <button
+                    onClick={e => {
+                      e.stopPropagation();
+                      likePost(currentItem._id);
+                    }}
+                    className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur rounded-full shadow-lg hover:scale-110 transition-all text-slate-400 active:text-red-500"
+                  >
+                    <Heart 
+                      size={20} 
+                      className={currentItem.likes?.length > 0 ? "text-red-500 fill-red-500" : ""} 
+                    />
+                  </button>
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 leading-tight">{exp.title}</h2>
-                <p className="text-slate-500 text-lg leading-relaxed">{exp.description}</p>
-                
-                <div className="pt-6 flex items-center justify-between border-t border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
-                      <User size={20} />
+
+                {/* Content Section */}
+                <div className="mt-10 space-y-4 px-4">
+                  <div className="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-widest">
+                    <MapPin size={14} /> {currentItem.location}
+                  </div>
+                  
+                  <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
+                    {currentItem.title}
+                  </h2>
+                  
+                  <p className="text-slate-500 text-lg leading-relaxed italic font-light">
+                    "{currentItem.description}"
+                  </p>
+
+                  <div className="pt-8 flex items-center justify-between border-t border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white">
+                        <User size={18} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase">Curated by</p>
+                        <p className="text-sm font-bold text-slate-800">{currentItem.userName}</p>
+                      </div>
                     </div>
-                    <div className="text-left">
-                      <p className="text-xs text-slate-400 font-bold uppercase">Posted by</p>
-                      <p className="text-sm font-bold text-slate-700">{exp.userName}</p>
+                    <div className="flex items-center gap-1.5 text-slate-400 text-xs font-bold">
+                      <Clock size={14} /> {timeAgo(currentItem.createdAt)}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs font-black text-slate-400 uppercase tracking-tighter bg-slate-50 px-3 py-1 rounded-full">
-                      {timeAgo(exp.createdAt)}
-                    </span>
-                  </div>
                 </div>
+              </motion.div>
+            ) : (
+              <div className="flex justify-center items-center h-full text-slate-300 italic">
+                No experiences found.
               </div>
-            </div>
-          ))}
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Premium Navigation Controls */}
-        <div className="flex justify-center items-center mt-16 gap-10">
+        {/* Minimal Navigation */}
+        <div className="flex justify-center items-center mt-16 gap-12">
           <button
-            onClick={() => setCurrentPage(currentPage - 1)}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-10 transition-all group"
           >
-            <ChevronLeft size={24} className="group-hover:-translate-x-1 transition-transform" /> Prev
+            <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" /> Back
           </button>
 
-          <div className="h-8 w-[1px] bg-slate-200" />
-
-          <span className="text-sm font-black tracking-[0.3em] text-slate-900">
-            {currentPage} <span className="text-slate-300">/</span> {totalPages}
+          <span className="text-sm font-black text-slate-900 tracking-[0.4em]">
+            {currentPage} <span className="text-slate-200">/</span> {totalPages}
           </span>
 
-          <div className="h-8 w-[1px] bg-slate-200" />
-
           <button
-            onClick={() => setCurrentPage(currentPage + 1)}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all"
+            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 disabled:opacity-10 transition-all group"
           >
-            Next <ChevronRight size={24} className="group-hover:translate-x-1 transition-transform" />
+            Next <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>
 
-      {/* Modal - Unchanged but ensures responsive premium look */}
-      {openDialog && selectedListing && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-6">
-          <div className="bg-white rounded-[2rem] w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
-            <button 
-              onClick={closeDialog} 
-              className="absolute top-5 right-5 p-2 bg-white/90 rounded-full text-slate-500 hover:text-slate-900 z-10 shadow-md"
+      {/* Modern Modal - Reusing the same refined style */}
+      <AnimatePresence>
+        {openDialog && selectedListing && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-[3rem] w-full max-w-2xl overflow-hidden relative shadow-2xl"
             >
-              <X size={20} />
-            </button>
+              <button 
+                onClick={() => setOpenDialog(false)} 
+                className="absolute top-6 right-6 p-2 bg-white/90 rounded-full text-slate-900 z-10 hover:rotate-90 transition-transform"
+              >
+                <X size={20} />
+              </button>
 
-            <div className="grid md:grid-cols-2">
-              <img
-                src={selectedListing.images[0]}
-                className="w-full h-full object-cover min-h-[350px]"
-                alt={selectedListing.title}
-              />
-              <div className="p-10 flex flex-col justify-center">
-                <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-3">{selectedListing.location}</p>
-                <h2 className="text-3xl font-black text-slate-900 leading-tight mb-5">{selectedListing.title}</h2>
-                <p className="text-slate-600 text-base leading-relaxed mb-8 italic font-light">"{selectedListing.description}"</p>
-                
-                <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase">Contributor</span>
-                    <span className="text-sm font-bold text-slate-900">{selectedListing.userName}</span>
+              <div className="grid md:grid-cols-2">
+                <img src={selectedListing.images[0]} className="w-full h-full object-cover min-h-[350px]" alt="Modal view" />
+                <div className="p-10 flex flex-col justify-center">
+                  <p className="text-blue-600 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">{selectedListing.location}</p>
+                  <h2 className="text-3xl font-black text-slate-900 mb-4 leading-tight">{selectedListing.title}</h2>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-6 italic">"{selectedListing.description}"</p>
+                  <div className="pt-6 border-t border-slate-100 flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-400 uppercase">Author: {selectedListing.userName}</span>
+                    {selectedListing.price && <span className="text-xl font-black text-blue-600">${selectedListing.price}</span>}
                   </div>
-                  {selectedListing.price && (
-                    <div className="text-right">
-                       <span className="text-[10px] font-bold text-slate-400 uppercase">Est. Price</span>
-                       <p className="text-2xl font-black text-blue-600">${selectedListing.price}</p>
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </section>
   );
 }
