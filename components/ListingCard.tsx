@@ -201,7 +201,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapPin, Heart, ChevronLeft, ChevronRight, User } from "lucide-react";
+import { MapPin, Heart, ChevronLeft, ChevronRight, User, DollarSign } from "lucide-react";
 
 interface Experience {
   _id: string;
@@ -229,7 +229,7 @@ export default function ListingCard() {
       const res = await axios.get(`${API}/api/lists/travel`);
       setExperiences(res.data);
     } catch (error) {
-      console.error("Fetch error:", error);
+      console.error("Failed to fetch:", error);
     }
   }
 
@@ -246,98 +246,94 @@ export default function ListingCard() {
     }
   }
 
-  // Define the single item to show
+  // Access the single item directly without looping
   const currentItem = experiences[currentPage - 1];
   const totalPages = experiences.length;
 
-  if (!currentItem) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-slate-400 font-medium">
-        Loading experience...
-      </div>
-    );
-  }
+  if (!currentItem) return (
+    <div className="min-h-screen flex items-center justify-center text-slate-400 animate-pulse">
+      Loading experience...
+    </div>
+  );
 
   return (
-    <section className="min-h-screen bg-white flex flex-col items-center justify-center p-6 md:p-12">
-      <div className="max-w-2xl w-full">
-        {/* Single Cohesive Card */}
-        <div className="bg-white border border-slate-100 rounded-[2.5rem] overflow-hidden shadow-sm">
-          
-          {/* Visual Header */}
-          <div className="relative aspect-[16/10] overflow-hidden">
-            <img 
-              src={currentItem.images[0]} 
-              className="w-full h-full object-cover" 
-              alt={currentItem.title} 
+    <section className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 md:p-8">
+      <div className="max-w-xl w-full bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 overflow-hidden">
+        
+        {/* Top Image Section */}
+        <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+          <img 
+            src={currentItem.images[0]} 
+            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
+            alt={currentItem.title}
+          />
+          <button
+            onClick={() => likePost(currentItem._id)}
+            className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur-md rounded-full shadow-lg hover:bg-white transition-all active:scale-90"
+          >
+            <Heart 
+              size={20} 
+              className={currentItem.likes?.length > 0 ? "fill-red-500 text-red-500" : "text-slate-400"} 
             />
-            <button
-              onClick={() => likePost(currentItem._id)}
-              className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-sm hover:scale-110 transition-all"
-            >
-              <Heart 
-                size={20} 
-                className={currentItem.likes?.length > 0 ? "fill-red-500 text-red-500" : "text-slate-400"} 
-              />
-            </button>
+          </button>
+        </div>
+
+        {/* Info Section */}
+        <div className="p-8 md:p-10">
+          <div className="flex items-center gap-1.5 text-blue-600 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+            <MapPin size={14} /> {currentItem.location}
           </div>
+          
+          <h1 className="text-3xl font-black text-slate-900 leading-tight mb-4 tracking-tight">
+            {currentItem.title}
+          </h1>
+          
+          <p className="text-slate-500 text-sm md:text-base leading-relaxed mb-8">
+            {currentItem.description}
+          </p>
 
-          {/* Content Body */}
-          <div className="p-8 md:p-12">
-            <div className="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-[0.2em] mb-4">
-              <MapPin size={14} /> {currentItem.location}
-            </div>
-            
-            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
-              {currentItem.title}
-            </h1>
-            
-            <p className="text-slate-500 text-lg leading-relaxed mb-10 font-light">
-              {currentItem.description}
-            </p>
-
-            {/* Author & Pricing Row */}
-            <div className="flex items-center justify-between pt-8 border-t border-slate-50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-white">
-                  <User size={18} />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Posted by</p>
-                  <p className="text-sm font-bold text-slate-700">{currentItem.userName}</p>
-                </div>
+          <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 border border-slate-100">
+                <User size={18} />
               </div>
-              
-              {currentItem.price && (
-                <div className="text-right">
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Estimate</p>
-                  <p className="text-2xl font-black text-slate-900">${currentItem.price}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-[9px] text-slate-400 font-bold uppercase">Traveler</p>
+                <p className="text-sm font-bold text-slate-800">{currentItem.userName}</p>
+              </div>
             </div>
+
+            {currentItem.price && (
+              <div className="text-right">
+                <p className="text-[9px] text-slate-400 font-bold uppercase">Starting from</p>
+                <p className="text-xl font-black text-slate-900">${currentItem.price}</p>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Minimal Navigation Controls */}
-        <div className="flex items-center justify-between mt-10 px-4">
+        {/* Integrated Navigation Bar */}
+        <div className="bg-slate-50/80 px-8 py-4 flex items-center justify-between border-t border-slate-100">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(prev => prev - 1)}
-            className="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 disabled:opacity-20 transition-all"
+            className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all group"
           >
-            <ChevronLeft size={20} /> Prev
+            <ChevronLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" /> 
+            Back
           </button>
 
-          <span className="text-xs font-black tracking-[0.3em] text-slate-300 uppercase">
-            {currentPage} <span className="text-slate-100">/</span> {totalPages}
+          <span className="text-[10px] font-black tracking-widest text-slate-300 uppercase">
+            {currentPage} of {totalPages}
           </span>
 
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(prev => prev + 1)}
-            className="flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-900 disabled:opacity-20 transition-all"
+            className="flex items-center gap-1 text-xs font-bold text-slate-400 hover:text-blue-600 disabled:opacity-20 transition-all group"
           >
-            Next <ChevronRight size={20} />
+            Next 
+            <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
       </div>
