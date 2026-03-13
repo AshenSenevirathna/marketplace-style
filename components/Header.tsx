@@ -1,136 +1,140 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { FaHome, FaPaperPlane, FaUser, FaBars, FaTimes, FaInfoCircle, FaEnvelope, FaChevronDown } from "react-icons/fa"
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { FaHome, FaPaperPlane, FaUser, FaBars, FaTimes, FaInfoCircle, FaEnvelope, FaChevronDown, FaPlusCircle, FaThList } from "react-icons/fa";
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="bg-white shadow-md fixed w-full z-50">
-      <div className="container mx-auto flex justify-between items-center py-6 px-5">
-
-        {/* Logo */}
-        <Link href="/" className="text-2xl md:text-3xl font-bold text-blue-900 tracking-wide flex items-center gap-2">
-          <FaPaperPlane className="text-yellow-500" /> TravelXP
+    <header 
+      className={`fixed w-full z-[100] transition-all duration-500 ${
+        scrolled 
+        ? "bg-white/80 backdrop-blur-xl shadow-sm py-3" 
+        : "bg-transparent py-5"
+      }`}
+    >
+      <div className="container mx-auto flex justify-between items-center px-6 md:px-12">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-200 group-hover:rotate-12 transition-transform duration-300">
+            <FaPaperPlane className="text-white text-lg md:text-xl" />
+          </div>
+          <span className={`text-2xl font-black tracking-tighter transition-colors ${scrolled ? "text-slate-900" : "text-slate-900 md:text-white"}`}>
+            Travel<span className="text-blue-600">XP</span>
+          </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        {/* <nav className="hidden md:flex space-x-6 items-center">
-          <Link href="/" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-           Home
-          </Link>
-          <Link href="/about" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-            About
-          </Link>
-          <Link href="/contact" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-           Contact
-          </Link>
-          <Link href="/login" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-            <FaUser /> Login
-          </Link>
-        </nav> */}
-
-        <nav className="hidden md:flex space-x-6 items-center">
-
-          <Link href="/" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-            Home
-          </Link>
-
-          <Link href="/about" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-            About
-          </Link>
-
-          <Link href="/contact" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-            Contact
-          </Link>
+        <nav className="hidden md:flex space-x-10 items-center">
+          {["Home", "About", "Contact"].map((item) => (
+            <Link 
+              key={item}
+              href={item === "Home" ? "/" : `/${item.toLowerCase()}`} 
+              className={`text-sm font-bold uppercase tracking-widest transition-all hover:text-blue-600 ${
+                scrolled ? "text-slate-600" : "text-white/90 hover:text-white"
+              }`}
+            >
+              {item}
+            </Link>
+          ))}
 
           <div className="relative group">
-            <button className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-              Experiences <FaChevronDown className="text-sm" />
+            <button className={`flex items-center gap-2 text-sm font-bold uppercase tracking-widest transition-all ${
+              scrolled ? "text-slate-600" : "text-white/90"
+            }`}>
+              Experiences <FaChevronDown className="text-[10px] group-hover:rotate-180 transition-transform" />
             </button>
 
-            <div className="absolute left-0 mt-3 w-48 bg-white shadow-lg rounded-lg border opacity-0  group-hover:opacity-100 group-hover:visible transition duration-200">
-
+            <div className="absolute top-full -left-4 mt-4 w-56 bg-white shadow-2xl shadow-blue-900/10 rounded-2xl border border-slate-100 p-2 opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
               <Link
                 href="/create"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition font-medium"
               >
-                Create Experience
+                <FaPlusCircle className="text-blue-500" /> Create Experience
               </Link>
-
               <Link
                 href="/my-list"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition font-medium"
               >
-                My Listings
+                <FaThList className="text-blue-500" /> My Listings
               </Link>
-
             </div>
           </div>
 
-          <Link href="/login" className="flex items-center gap-1 text-blue-900 hover:text-yellow-500 transition">
-            <FaUser /> Login
+          <Link 
+            href="/login" 
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 ${
+              scrolled 
+              ? "bg-slate-900 text-white hover:bg-blue-600 shadow-lg shadow-slate-200" 
+              : "bg-white text-slate-900 hover:bg-blue-50 shadow-xl"
+            }`}
+          >
+            <FaUser size={12} /> Login
           </Link>
-
         </nav>
 
-        {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-blue-900 text-2xl focus:outline-none"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </button>
-      </div>
-
-      {/* Mobile Menu (slide from right) */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl transform transition-transform duration-300 z-50 ${menuOpen ? "translate-x-0" : "translate-x-full"
+          className={`md:hidden p-2 rounded-xl transition-colors ${
+            scrolled ? "text-slate-900 bg-slate-100" : "text-white bg-white/20 backdrop-blur-md"
           }`}
-      >
-        {/* Close button */}
-        <button
-          className="absolute top-4 right-4 text-blue-900 text-2xl focus:outline-none"
-          onClick={() => setMenuOpen(false)}
+          onClick={() => setMenuOpen(true)}
         >
-          <FaTimes />
+          <FaBars />
         </button>
-
-        {/* Menu links */}
-        <nav className="flex flex-col mt-16 space-y-4 px-6">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-blue-900 hover:text-yellow-500 transition"
-            onClick={() => setMenuOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            href="/about"
-            className="flex items-center gap-2 text-blue-900 hover:text-yellow-500 transition"
-            onClick={() => setMenuOpen(false)}
-          >
-            About
-          </Link>
-          <Link
-            href="/contact"
-            className="flex items-center gap-2 text-blue-900 hover:text-yellow-500 transition"
-            onClick={() => setMenuOpen(false)}
-          >
-            Contact
-          </Link>
-          <Link
-            href="/login"
-            className="flex items-center gap-2 text-blue-900 hover:text-yellow-500 transition"
-            onClick={() => setMenuOpen(false)}
-          >
-            <FaUser /> Login
-          </Link>
-        </nav>
       </div>
 
+      <div
+        className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] transition-opacity duration-300 ${
+          menuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
+      
+      <div
+        className={`fixed top-0 right-0 h-full w-[80%] max-w-sm bg-white shadow-2xl z-[120] transform transition-transform duration-500 ease-out p-8 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex justify-between items-center mb-12">
+          <span className="text-xl font-black tracking-tighter text-slate-900">
+            Travel<span className="text-blue-600">XP</span>
+          </span>
+          <button
+            className="p-3 bg-slate-100 rounded-full text-slate-900 hover:rotate-90 transition-transform"
+            onClick={() => setMenuOpen(false)}
+          >
+            <FaTimes />
+          </button>
+        </div>
+
+        <nav className="flex flex-col space-y-6">
+          {["Home", "About", "Contact", "Login"].map((item) => (
+            <Link
+              key={item}
+              href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              className="text-2xl font-bold text-slate-900 hover:text-blue-600 transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              {item}
+            </Link>
+          ))}
+          
+          <div className="pt-6 border-t border-slate-100 space-y-4">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Experiences</p>
+            <Link href="/create" onClick={() => setMenuOpen(false)} className="block text-lg font-semibold text-slate-700 italic">Create Story</Link>
+            <Link href="/my-list" onClick={() => setMenuOpen(false)} className="block text-lg font-semibold text-slate-700 italic">Dashboard</Link>
+          </div>
+        </nav>
+      </div>
     </header>
-  )
+  );
 }

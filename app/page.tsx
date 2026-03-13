@@ -1,39 +1,13 @@
-"use client"
-
-import { useEffect, useState } from "react"
-//import { getListings } from "../services/api"
-import ListingCard from "../components/ListingCard"
-import { Listing } from "../types/listing"
+"use client";
 import HomePage from "./home/page"
 
 
 
 export default function Home() {
-
-  // const [listings, setListings] = useState<Listing[]>([])
-
-  // useEffect(() => {
-  //   fetchListings()
-  // }, [])
-
-  // const fetchListings = async () => {
-  //   const res = await getListings()
-  //   setListings(res.data)
-  // }
-
   return (
     <div>
 
       <HomePage/>
-
-      {/* <div className="grid">
-        {listings.map((listing) => (
-          <ListingCard
-            key={listing._id}
-            listing={listing}
-          />
-        ))}
-      </div> */}
 
     </div>
   )

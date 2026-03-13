@@ -1,438 +1,220 @@
 "use client";
 
-import mediaUpload from "@/utils/mediaUpload";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react"
+import axios from "axios";
 import toast from "react-hot-toast";
-import { FaMapMarkerAlt, FaDollarSign, FaCloudUploadAlt } from "react-icons/fa"
+import mediaUpload from "@/utils/mediaUpload";
+import { FaMapMarkerAlt, FaDollarSign, FaCloudUploadAlt, FaTimes, FaGlobeAmericas } from "react-icons/fa";
 
 export default function CreateExperience() {
-
-  //const [listId, setListId] = useState("");
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [images, setImages] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState<number | undefined>(undefined);
-  //const [price, setPrice] = useState<Number | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
   const router = useRouter();
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
-  async function addList() {
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUserId = localStorage.getItem("userId");
+    const storedUserName = localStorage.getItem("userName");
 
-    // const token = localStorage.getItem("token");
-    // if (token == null) {
-    //   router.push("/login");
-    //   return;
-    // }
-
-    // Upload images to Supabase
-    const promises = []
-    for (let i = 0; i < images.length; i++) {
-      promises[i] = mediaUpload(images[i]);
+    if (!storedToken) {
+      toast.error("Please login first");
+      router.push("/login");
+    } else {
+      setToken(storedToken);
+      setUserId(storedUserId);
+      setUserName(storedUserName);
     }
+  }, []);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
+      setImages(prev => [...prev, ...selectedFiles]);
+      
+      const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+      setPreviewUrls(prev => [...prev, ...newPreviews]);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
+    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const addList = async () => {
+    if (!title || !location || !description) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (images.length === 0) {
+      toast.error("Please upload at least one image");
+      return;
+    }
+
+    setIsUploading(true);
+    const loadingToast = toast.loading("Crafting your experience...");
 
     try {
-      const urls = await Promise.all(promises);
+      const urls = await Promise.all(images.map(img => mediaUpload(img)));
 
-      // Send data to backend
-      const list = {
-        //listId : listId,
-        title: title,
-        location: location,
+      const listData = {
+        title,
+        location,
+        description,
+        price,
         images: urls,
-        description: description,
-        price: price
-      }
+      };
 
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/lists`, list, {
-        // headers: {
-        //   Authorization: "Bearer " + token
-        // }
+      await axios.post(`${API}/api/lists`, listData, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
+      toast.dismiss(loadingToast);
       toast.success("Travel experience created successfully");
-      router.push("/");
+      router.push("/my-list");
 
     } catch (error) {
-      toast.error("Error creating experience")
+      toast.dismiss(loadingToast);
+      console.error(error);
+      toast.error("Failed to create experience");
+    } finally {
+      setIsUploading(false);
     }
-  }
+  };
 
   return (
-    <section className="min-h-screen bg-gray-50 py-16 px-6">
-      <div className="max-w-3xl mx-auto">
-
-        {/* Title */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-blue-900">
-            Create Travel Experience
+    <section className="min-h-screen bg-[#F8FAFC] py-12 md:py-20 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200 mb-6 text-white text-2xl">
+            <FaGlobeAmericas />
+          </div>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+            Share Your <span className="text-blue-600">Adventure</span>
           </h1>
-          <p className="text-gray-500 mt-2">
-            Share your unique travel adventure with travelers worldwide
+          <p className="mt-4 text-slate-500 text-lg font-light">
+            Tell the world about the hidden gems you've discovered.
           </p>
         </div>
 
-        {/* Form Card */}
-        <div className="bg-white shadow-xl rounded-2xl p-8">
-
-          {/* <form className="space-y-6"> */}
-
-          {/* Experience Title */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Experience Title
-            </label>
-            <input
-              type="text"
-              name="title"
-              placeholder="Sunset Boat Tour"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Location */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Location
-            </label>
-
-            <div className="flex items-center border border-gray-300 rounded-lg px-3">
-              <FaMapMarkerAlt className="text-gray-400 mr-2" />
+        <div className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
+          <div className="p-6 md:p-12 space-y-8">
+            
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1 uppercase tracking-wider">Experience Title</label>
               <input
                 type="text"
-                name="location"
-                placeholder="Bali, Indonesia"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full py-3 focus:outline-none"
-                required
+                placeholder="e.g., Sunset Kayaking in Mirissa"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                className="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-lg font-medium placeholder:text-slate-300"
               />
             </div>
-          </div>
 
-          {/* Image Upload */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Upload Experience Image
-            </label>
-
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl h-48 cursor-pointer hover:border-yellow-400 transition">
-
-
-              {/* <img
-                    //alt="preview"
-                    className="w-full h-full object-cover rounded-xl"
-                  /> */}
-
-              <div className="text-center">
-                <FaCloudUploadAlt className="text-4xl text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-500">
-                  Click to upload an image
-                </p>
-                <p className="text-sm text-gray-400">
-                  PNG, JPG, or JPEG
-                </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1 uppercase tracking-wider">Location</label>
+                <div className="flex items-center bg-slate-50 px-6 py-4 rounded-2xl focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+                  <FaMapMarkerAlt className="text-blue-500 mr-3" />
+                  <input
+                    type="text"
+                    placeholder="Where did it happen?"
+                    value={location}
+                    onChange={e => setLocation(e.target.value)}
+                    className="w-full bg-transparent focus:outline-none font-medium"
+                  />
+                </div>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 ml-1 uppercase tracking-wider">Price (Optional)</label>
+                <div className="flex items-center bg-slate-50 px-6 py-4 rounded-2xl focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+                  <FaDollarSign className="text-blue-500 mr-3" />
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={price ?? ""}
+                    onChange={e => setPrice(e.target.value ? Number(e.target.value) : undefined)}
+                    className="w-full bg-transparent focus:outline-none font-medium"
+                  />
+                </div>
+              </div>
+            </div>
 
-              <input
-                type="file"
-                multiple
+            <div className="space-y-4">
+              <label className="text-sm font-bold text-slate-700 ml-1 uppercase tracking-wider">Gallery</label>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {previewUrls.map((url, idx) => (
+                  <div key={idx} className="relative group aspect-square rounded-2xl overflow-hidden shadow-md">
+                    <img src={url} alt="preview" className="w-full h-full object-cover transition group-hover:scale-110" />
+                    <button 
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full text-red-500 shadow-sm opacity-0 group-hover:opacity-100 transition"
+                    >
+                      <FaTimes size={12} />
+                    </button>
+                  </div>
+                ))}
+                
+                <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-slate-200 rounded-2xl cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all group">
+                  <FaCloudUploadAlt className="text-3xl text-slate-300 group-hover:text-blue-500 transition-colors mb-2" />
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Add Photo</span>
+                  <input type="file" multiple className="hidden" onChange={handleImageChange} />
+                </label>
+              </div>
+            </div>
 
-                className="hidden"
-                onChange={(e) => {
-                  const files = e.target.files;
-                  if (files) {
-                    setImages(Array.from(files));
-                  }
-                }}
-              />
-            </label>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Short Description
-            </label>
-            <textarea
-              name="description"
-              placeholder="Enjoy a beautiful sunset while sailing along the coastline..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Price */}
-          <div>
-            <label className="block text-gray-700 font-medium mb-2">
-              Price (Optional)
-            </label>
-
-            <div className="flex items-center border border-gray-300 rounded-lg px-3">
-              <FaDollarSign className="text-gray-400 mr-2" />
-              <input
-                type="number"
-                name="price"
-                placeholder="45"
-                value={price ?? ""}
-                onChange={(e) =>
-                  setPrice(e.target.value ? Number(e.target.value) : undefined)
-                }
-                // value={price}
-                // onChange={(e) =>
-                //   setPrice(e.target.value === "" ? "" : Number(e.target.value))
-                // }
-                className="w-full py-3 focus:outline-none"
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 ml-1 uppercase tracking-wider">The Story</label>
+              <textarea
+                placeholder="Describe the atmosphere, the people, and what made it special..."
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                rows={6}
+                className="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium leading-relaxed"
               />
             </div>
+
+            <div className="pt-4">
+              <button
+                onClick={addList}
+                disabled={isUploading}
+                className={`w-full py-5 rounded-2xl font-bold text-lg shadow-xl transition-all flex items-center justify-center space-x-3
+                  ${isUploading 
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
+                    : 'bg-slate-900 text-white hover:bg-blue-600 hover:shadow-blue-200 active:scale-[0.98]'
+                  }`}
+              >
+                {isUploading ? (
+                  <span>Processing...</span>
+                ) : (
+                  <>
+                    <span>Publish Experience</span>
+                  </>
+                )}
+              </button>
+              <p className="text-center text-slate-400 text-xs mt-4">
+                By publishing, you agree to TravelQuest's community guidelines.
+              </p>
+            </div>
+
           </div>
-
-          {/* Submit */}
-          <button
-            onClick={addList}
-            type="submit"
-            className="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-semibold py-3 rounded-lg transition shadow-md"
-          >
-            Publish Experience
-          </button>
-
-          {/* </form> */}
         </div>
       </div>
     </section>
-  )
+  );
 }
-
-
-// "use client"
-
-// import { useState } from "react"
-// import { FaMapMarkerAlt, FaImage, FaDollarSign } from "react-icons/fa"
-
-// export default function CreateExperience() {
-//   const [form, setForm] = useState({
-//     title: "",
-//     location: "",
-//     image: "",
-//     description: "",
-//     price: "",
-//   })
-
-//   const handleChange = (e: any) => {
-//     setForm({ ...form, [e.target.name]: e.target.value })
-//   }
-
-//   const handleSubmit = (e: any) => {
-//     e.preventDefault()
-//     console.log(form)
-//   }
-
-//   return (
-//     <section className="min-h-screen bg-gray-50 py-16 px-6">
-//       <div className="max-w-3xl mx-auto">
-
-//         {/* Title */}
-//         <div className="text-center mb-10">
-//           <h1 className="text-4xl font-bold text-blue-900">
-//             Create Travel Experience
-//           </h1>
-//           <p className="text-gray-500 mt-2">
-//             Share your unique travel experience with the world
-//           </p>
-//         </div>
-
-//         {/* Form Card */}
-//         <div className="bg-white shadow-xl rounded-2xl p-8">
-
-//           <form onSubmit={handleSubmit} className="space-y-6">
-
-//             {/* Experience Title */}
-//             <div>
-//               <label className="block text-gray-700 font-medium mb-2">
-//                 Experience Title
-//               </label>
-//               <input
-//                 type="text"
-//                 name="title"
-//                 placeholder="Sunset Boat Tour"
-//                 value={form.title}
-//                 onChange={handleChange}
-//                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-//                 required
-//               />
-//             </div>
-
-//             {/* Location */}
-//             <div>
-//               <label className="block text-gray-700 font-medium mb-2">
-//                 Location
-//               </label>
-
-//               <div className="flex items-center border border-gray-300 rounded-lg px-3">
-//                 <FaMapMarkerAlt className="text-gray-400 mr-2" />
-//                 <input
-//                   type="text"
-//                   name="location"
-//                   placeholder="Bali, Indonesia"
-//                   value={form.location}
-//                   onChange={handleChange}
-//                   className="w-full py-3 focus:outline-none"
-//                   required
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Image URL */}
-//             <div>
-//               <label className="block text-gray-700 font-medium mb-2">
-//                 Image URL
-//               </label>
-
-//               <div className="flex items-center border border-gray-300 rounded-lg px-3">
-//                 <FaImage className="text-gray-400 mr-2" />
-//                 <input
-//                   type="text"
-//                   name="image"
-//                   placeholder="https://images.unsplash.com/..."
-//                   value={form.image}
-//                   onChange={handleChange}
-//                   className="w-full py-3 focus:outline-none"
-//                   required
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Description */}
-//             <div>
-//               <label className="block text-gray-700 font-medium mb-2">
-//                 Short Description
-//               </label>
-//               <textarea
-//                 name="description"
-//                 placeholder="Enjoy a beautiful sunset while sailing along the coastline..."
-//                 value={form.description}
-//                 onChange={handleChange}
-//                 rows={4}
-//                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
-//                 required
-//               />
-//             </div>
-
-//             {/* Price */}
-//             <div>
-//               <label className="block text-gray-700 font-medium mb-2">
-//                 Price (Optional)
-//               </label>
-
-//               <div className="flex items-center border border-gray-300 rounded-lg px-3">
-//                 <FaDollarSign className="text-gray-400 mr-2" />
-//                 <input
-//                   type="number"
-//                   name="price"
-//                   placeholder="45"
-//                   value={form.price}
-//                   onChange={handleChange}
-//                   className="w-full py-3 focus:outline-none"
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Submit Button */}
-//             <button
-//               type="submit"
-//               className="w-full bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-semibold py-3 rounded-lg transition shadow-md"
-//             >
-//               Publish Experience
-//             </button>
-
-//           </form>
-//         </div>
-//       </div>
-//     </section>
-//   )
-// }
-
-// "use client"
-
-// import { useState } from "react"
-// import { createListing } from "../../services/api"
-
-// export default function CreateListing() {
-
-//   const [form, setForm] = useState({
-//     title: "",
-//     location: "",
-//     imageUrl: "",
-//     description: "",
-//     price: ""
-//   })
-
-//   const submit = async (e: React.FormEvent) => {
-
-//     e.preventDefault()
-
-//     const token = localStorage.getItem("token") || ""
-
-//     await createListing(form, token)
-
-//     alert("Listing created")
-
-//     window.location.href = "/"
-//   }
-
-//   return (
-//     <form onSubmit={submit}>
-
-//       <h2>Create Experience</h2>
-
-//       <input
-//         placeholder="Title"
-//         onChange={(e) =>
-//           setForm({ ...form, title: e.target.value })
-//         }
-//       />
-
-//       <input
-//         placeholder="Location"
-//         onChange={(e) =>
-//           setForm({ ...form, location: e.target.value })
-//         }
-//       />
-
-//       <input
-//         placeholder="Image URL"
-//         onChange={(e) =>
-//           setForm({ ...form, imageUrl: e.target.value })
-//         }
-//       />
-
-//       <textarea
-//         placeholder="Description"
-//         onChange={(e) =>
-//           setForm({ ...form, description: e.target.value })
-//         }
-//       />
-
-//       <input
-//         placeholder="Price"
-//         onChange={(e) =>
-//           setForm({ ...form, price: e.target.value })
-//         }
-//       />
-
-//       <button type="submit">
-//         Publish
-//       </button>
-
-//     </form>
-//   )
-// }
