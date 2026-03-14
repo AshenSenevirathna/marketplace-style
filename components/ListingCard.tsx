@@ -159,70 +159,10 @@ export default function ListingCard() {
 
 
       {openDialog && selectedListing && (
-
-
-        // <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-4 overflow-y-auto">
-        //   <div className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl animate-in fade-in zoom-in duration-300 border border-slate-200 relative flex flex-col max-h-[70vh]">
-
-
-        //     <button
-        //       onClick={closeDialog}
-        //       className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-md rounded-full text-slate-500 hover:text-slate-900 hover:scale-110 transition-transform z-10 shadow-sm"
-        //     >
-        //       <X size={22} />
-        //     </button>
-
-
-        //     <div className="overflow-y-auto">
-
-        //       <div className="bg-red w-full">
-        //         <div className="bg-yellow-200">
-        //           <div className="relative group overflow-hidden rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none">
-        //             <img
-        //               src={selectedListing.images[0]}
-        //               alt={selectedListing.title}
-        //               className="w-full h-full object-cover min-h-[320px] transition-transform duration-500 group-hover:scale-105"
-        //             />
-        //           </div>
-        //         </div>
-        //         <div className="">
-        //           <div className="p-8 flex flex-col justify-between">
-        //             <div>
-        //               <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">
-        //                 {selectedListing.location}
-        //               </p>
-        //               <h2 className="text-3xl font-extrabold text-slate-900 leading-snug mb-4">
-        //                 {selectedListing.title}
-        //               </h2>
-        //               <p className="text-slate-600 text-sm leading-relaxed mb-6 italic whitespace-pre-line">
-        //                 "{selectedListing.description}"
-        //               </p>
-        //             </div>
-
-        //             <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-6 border-t border-slate-100 gap-3 md:gap-0">
-        //               <p className="text-xs font-medium text-slate-400">
-        //                 Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span>
-        //               </p>
-
-        //               {selectedListing.price && (
-        //                 <p className="text-2xl font-extrabold text-slate-900">
-        //                   ${selectedListing.price}
-        //                 </p>
-        //               )}
-        //             </div>
-        //           </div>
-        //         </div>
-        //       </div>
-        //     </div>
-
-        //   </div>
-        // </div>
-
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
 
-          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-slate-200 relative max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-300">
+          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-slate-200 relative max-h-[70vh] overflow-hidden animate-in fade-in zoom-in duration-300">
 
-            {/* Close Button */}
             <button
               onClick={closeDialog}
               className="absolute top-5 right-5 p-2.5 bg-white/90 backdrop-blur-md rounded-full text-slate-500 hover:text-slate-900 hover:scale-110 transition shadow-md z-10"
@@ -230,10 +170,8 @@ export default function ListingCard() {
               <X size={22} />
             </button>
 
-            {/* Scrollable Content */}
             <div className="overflow-y-auto max-h-[90vh]">
 
-              {/* Image */}
               <div className="relative group">
                 <img
                   src={selectedListing.images[0]}
@@ -241,32 +179,25 @@ export default function ListingCard() {
                   className="w-full h-[320px] md:h-[380px] object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
-                {/* Image Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
               </div>
 
-              {/* Content */}
               <div className="p-8 md:p-10">
 
-                {/* Location */}
                 <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">
                   {selectedListing.location}
                 </p>
 
-                {/* Title */}
                 <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-4">
                   {selectedListing.title}
                 </h2>
 
-                {/* Description */}
                 <p className="text-slate-600 text-sm leading-relaxed mb-8 italic whitespace-pre-line">
                   "{selectedListing.description}"
                 </p>
 
-                {/* Bottom Section */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pt-6 border-t border-slate-100">
 
-                  {/* Creator */}
                   <p className="text-sm text-slate-400">
                     Shared by{" "}
                     <span className="font-semibold text-slate-900">
@@ -274,7 +205,6 @@ export default function ListingCard() {
                     </span>
                   </p>
 
-                  {/* Price */}
                   {selectedListing.price && (
                     <p className="text-2xl font-extrabold text-slate-900">
                       ${selectedListing.price}
