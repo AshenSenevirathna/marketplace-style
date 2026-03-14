@@ -1,40 +1,35 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h2><b>🌍Project Overview</b></h2>
 
-## Getting Started
+Travel Experience Marketplace is a web application that allows users to explore and share unique travel experiences around the world.Users can browse available travel listings,view detailed descriptions,and create their own experiences after logging into the platform.The goal of the application is to provide a simple marketplace where travelers can discover activities such as tours,adventures,cultural experiences and local attractions.
 
-First, run the development server:
+The platform includes authentication,listing creation and a modern user interface that allows users to easily interact with travel content.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<h2><b>🛠️Tech Stack</b></h2>
+<h3>🎨Frontend</h3>
+<ul>
+  <ol>•Next.js (App Router) – Used to build the modern React-based user interface.</ol>
+  <ol>•React-For building reusable UI components.</ol>
+  <ol>•TypeScript-Adds type safety and improves code reliability.</ol>
+  <ol>•Tailwind CSS-Used for responsive and modern styling.</ol>
+  <ol>•Axios-For communicating with the backend API.</ol>
+</ul>
+<h3>🔧Backend</h3>
+<ul>
+  <ol>•Node.js-Runtime environment for the backend server.</ol>
+  <ol>•Express.js – Web framework used to build REST APIs.</ol>
+</ul>
+<h3>🗄️Database</h3>
+<ul>
+  <ol>•MongoDB-NoSQL database used to store user accounts and travel listings.</ol>
+  <ol>•Mongoose – ODM library used to interact with MongoDB.</ol>
+</ul>
+<h3>🔐Authentication</h3>
+<ul>
+  <ol>•JWT(JSON Web Tokens)-Used for secure user authentication and session management.</ol>
+</ul>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h2><b>Setup Instructions</b></h3>
+<h3><b>1.Clone the repository</b></h3>
+<h3><b>2.Setup backend</b></h3>
+<h3><b>3.Setup frontend</b></h3>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# marketplace-style
->>>>>>> 702130c00c3b58da81b3841c516fac3771913529
