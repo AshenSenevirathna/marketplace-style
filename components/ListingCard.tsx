@@ -471,168 +471,291 @@
 //   );
 // }
 
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { MapPin, Heart, User, ChevronLeft, ChevronRight } from "lucide-react";
+
+// interface Experience {
+//   _id: string;
+//   title: string;
+//   location: string;
+//   description: string;
+//   price?: number;
+//   images: string[];
+//   userName: string;
+//   likes: string[];
+// }
+
+// export default function ListingCard() {
+//   const [experiences, setExperiences] = useState<Experience[]>([]);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const itemsPerPage = 8; // Adjust this number as needed
+  
+//   const API = process.env.NEXT_PUBLIC_API_URL;
+
+//   useEffect(() => {
+//     fetchExperiences();
+//   }, []);
+
+//   async function fetchExperiences() {
+//     try {
+//       const res = await axios.get(`${API}/api/lists/travel`);
+//       setExperiences(res.data);
+//     } catch (error) {
+//       console.error("Failed to fetch:", error);
+//     }
+//   }
+
+//   async function likePost(id: string) {
+//     const userId = localStorage.getItem("userId");
+//     if (!userId) return alert("Please login first");
+
+//     try {
+//       const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
+//       setExperiences(prev =>
+//         prev.map(exp =>
+//           exp._id === id ? { ...exp, likes: res.data.likes } : exp
+//         )
+//       );
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }
+
+//   // --- Pagination Logic ---
+//   const indexOfLastItem = currentPage * itemsPerPage;
+//   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+//   const currentItems = experiences.slice(indexOfFirstItem, indexOfLastItem);
+//   const totalPages = Math.ceil(experiences.length / itemsPerPage);
+
+//   const paginate = (pageNumber: number) => {
+//     setCurrentPage(pageNumber);
+//     window.scrollTo({ top: 0, behavior: 'smooth' });
+//   };
+
+//   return (
+//     <section className="min-h-screen bg-slate-50 p-6 md:p-10">
+//       <h1 className="text-3xl font-bold text-slate-900 mb-10 text-center">
+//         Explore Travel Experiences
+//       </h1>
+
+//       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+//         {currentItems.map((item) => (
+//           <div
+//             key={item._id}
+//             className="bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
+//           >
+//             {/* Image */}
+//             <div className="relative h-56 overflow-hidden">
+//               <img
+//                 src={item.images?.[0]}
+//                 alt={item.title}
+//                 className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+//               />
+//               <button
+//                 onClick={() => likePost(item._id)}
+//                 className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow"
+//               >
+//                 <Heart
+//                   size={18}
+//                   className={
+//                     item.likes?.includes(localStorage.getItem("userId") || "")
+//                       ? "fill-red-500 text-red-500"
+//                       : "text-gray-400"
+//                   }
+//                 />
+//               </button>
+//             </div>
+
+//             {/* Content */}
+//             <div className="p-5">
+//               <div className="flex items-center text-blue-600 text-xs font-semibold gap-1 mb-2">
+//                 <MapPin size={14} />
+//                 {item.location}
+//               </div>
+//               <h2 className="text-lg font-bold text-slate-900 mb-2 line-clamp-1">
+//                 {item.title}
+//               </h2>
+//               <p className="text-sm text-slate-500 line-clamp-2 mb-4">
+//                 {item.description}
+//               </p>
+//               <div className="flex items-center justify-between border-t pt-3">
+//                 <div className="flex items-center gap-2">
+//                   <User size={16} className="text-slate-400" />
+//                   <span className="text-sm font-medium text-slate-700">
+//                     {item.userName}
+//                   </span>
+//                 </div>
+//                 {item.price && (
+//                   <span className="text-lg font-bold text-slate-900">
+//                     ${item.price}
+//                   </span>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* Pagination Controls */}
+//       {totalPages > 1 && (
+//         <div className="flex justify-center items-center gap-2 mt-12">
+//           <button
+//             onClick={() => paginate(currentPage - 1)}
+//             disabled={currentPage === 1}
+//             className="p-2 rounded-lg border bg-white disabled:opacity-30 hover:bg-slate-100 transition"
+//           >
+//             <ChevronLeft size={20} />
+//           </button>
+
+//           {Array.from({ length: totalPages }, (_, i) => (
+//             <button
+//               key={i + 1}
+//               onClick={() => paginate(i + 1)}
+//               className={`px-4 py-2 rounded-lg border transition ${
+//                 currentPage === i + 1
+//                   ? "bg-blue-600 text-white border-blue-600"
+//                   : "bg-white text-slate-600 hover:bg-slate-100"
+//               }`}
+//             >
+//               {i + 1}
+//             </button>
+//           ))}
+
+//           <button
+//             onClick={() => paginate(currentPage + 1)}
+//             disabled={currentPage === totalPages}
+//             className="p-2 rounded-lg border bg-white disabled:opacity-30 hover:bg-slate-100 transition"
+//           >
+//             <ChevronRight size={20} />
+//           </button>
+//         </div>
+//       )}
+//     </section>
+//   );
+// }
+
 "use client";
 
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { MapPin, Heart, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { FaMapMarkerAlt, FaHeart } from "react-icons/fa";
 
 interface Experience {
   _id: string;
   title: string;
   location: string;
   description: string;
-  price?: number;
+  price: number;
   images: string[];
   userName: string;
   likes: string[];
+  createdAt: string;
 }
 
-export default function ListingCard() {
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; // Adjust this number as needed
-  
+export default function ListingCard({ exp }: { exp: Experience }) {
+
+  const [likes, setLikes] = useState(exp.likes);
+
+  const userId =
+    typeof window !== "undefined"
+      ? localStorage.getItem("userId")
+      : null;
+
   const API = process.env.NEXT_PUBLIC_API_URL;
 
-  useEffect(() => {
-    fetchExperiences();
-  }, []);
-
-  async function fetchExperiences() {
+  async function handleLike() {
     try {
-      const res = await axios.get(`${API}/api/lists/travel`);
-      setExperiences(res.data);
-    } catch (error) {
-      console.error("Failed to fetch:", error);
-    }
-  }
 
-  async function likePost(id: string) {
-    const userId = localStorage.getItem("userId");
-    if (!userId) return alert("Please login first");
-
-    try {
-      const res = await axios.post(`${API}/api/lists/like/${id}`, { userId });
-      setExperiences(prev =>
-        prev.map(exp =>
-          exp._id === id ? { ...exp, likes: res.data.likes } : exp
-        )
+      const res = await axios.post(
+        `${API}/api/lists/like/${exp._id}`,
+        { userId }
       );
+
+      setLikes(res.data.likes);
+
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   }
 
-  // --- Pagination Logic ---
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = experiences.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(experiences.length / itemsPerPage);
+  // time ago function
+  function timeAgo(dateString: string) {
+    const now = new Date();
+    const created = new Date(dateString);
 
-  const paginate = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+    const seconds = Math.floor((now.getTime() - created.getTime()) / 1000);
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds / 60);
+
+    if (hours > 0) return `Posted ${hours} hours ago`;
+    if (minutes > 0) return `Posted ${minutes} minutes ago`;
+
+    return "Posted just now";
+  }
+
+  const liked = userId && likes.includes(userId);
 
   return (
-    <section className="min-h-screen bg-slate-50 p-6 md:p-10">
-      <h1 className="text-3xl font-bold text-slate-900 mb-10 text-center">
-        Explore Travel Experiences
-      </h1>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
-        {currentItems.map((item) => (
-          <div
-            key={item._id}
-            className="bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group"
-          >
-            {/* Image */}
-            <div className="relative h-56 overflow-hidden">
-              <img
-                src={item.images?.[0]}
-                alt={item.title}
-                className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-              />
-              <button
-                onClick={() => likePost(item._id)}
-                className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow"
-              >
-                <Heart
-                  size={18}
-                  className={
-                    item.likes?.includes(localStorage.getItem("userId") || "")
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-400"
-                  }
-                />
-              </button>
-            </div>
+      {/* Image */}
+      <img
+        src={exp.images[0]}
+        alt={exp.title}
+        className="w-full h-56 object-cover"
+      />
 
-            {/* Content */}
-            <div className="p-5">
-              <div className="flex items-center text-blue-600 text-xs font-semibold gap-1 mb-2">
-                <MapPin size={14} />
-                {item.location}
-              </div>
-              <h2 className="text-lg font-bold text-slate-900 mb-2 line-clamp-1">
-                {item.title}
-              </h2>
-              <p className="text-sm text-slate-500 line-clamp-2 mb-4">
-                {item.description}
-              </p>
-              <div className="flex items-center justify-between border-t pt-3">
-                <div className="flex items-center gap-2">
-                  <User size={16} className="text-slate-400" />
-                  <span className="text-sm font-medium text-slate-700">
-                    {item.userName}
-                  </span>
-                </div>
-                {item.price && (
-                  <span className="text-lg font-bold text-slate-900">
-                    ${item.price}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="p-5">
+
+        {/* Title */}
+        <h2 className="text-xl font-bold text-gray-800">
+          {exp.title}
+        </h2>
+
+        {/* Location */}
+        <p className="flex items-center text-gray-500 mt-1">
+          <FaMapMarkerAlt className="mr-1" />
+          {exp.location}
+        </p>
+
+        {/* Description */}
+        <p className="text-gray-600 mt-3">
+          {exp.description}
+        </p>
+
+        {/* Price */}
+        <p className="text-blue-600 font-semibold mt-3">
+          ${exp.price}
+        </p>
+
+        {/* Creator */}
+        <p className="text-sm text-gray-500 mt-2">
+          By {exp.userName}
+        </p>
+
+        {/* Time */}
+        <p className="text-sm text-gray-400">
+          {timeAgo(exp.createdAt)}
+        </p>
+
+        {/* Like Button */}
+        <button
+          onClick={handleLike}
+          className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg ${
+            liked
+              ? "bg-red-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+        >
+          <FaHeart />
+          {likes.length}
+        </button>
+
       </div>
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-12">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="p-2 rounded-lg border bg-white disabled:opacity-30 hover:bg-slate-100 transition"
-          >
-            <ChevronLeft size={20} />
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => paginate(i + 1)}
-              className={`px-4 py-2 rounded-lg border transition ${
-                currentPage === i + 1
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white text-slate-600 hover:bg-slate-100"
-              }`}
-            >
-              {i + 1}
-            </button>
-          ))}
-
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="p-2 rounded-lg border bg-white disabled:opacity-30 hover:bg-slate-100 transition"
-          >
-            <ChevronRight size={20} />
-          </button>
-        </div>
-      )}
-    </section>
+    </div>
   );
 }
