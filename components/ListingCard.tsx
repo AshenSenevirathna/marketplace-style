@@ -178,8 +178,16 @@ export default function ListingCard() {
             {/* Scrollable Content */}
             <div className="overflow-y-auto">
               {/* <div className="grid md:grid-cols-2 gap-6 md:gap-8"> */}
-              <div className="bg-red w-full h-[100px]">
-                <div className="bg-yellow-200">hello</div>
+              <div className="bg-red w-full">
+                <div className="bg-yellow-200">
+                  <div className="relative group overflow-hidden rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none">
+                    <img
+                      src={selectedListing.images[0]}
+                      alt={selectedListing.title}
+                      className="w-full h-full object-cover min-h-[320px] transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                </div>
                 <div className="bg-blue-300">hello</div>
               </div>
             </div>
