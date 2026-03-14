@@ -178,7 +178,11 @@ export default function ListingCard() {
             {/* Scrollable Content */}
             <div className="overflow-y-auto">
               {/* <div className="grid md:grid-cols-2 gap-6 md:gap-8"> */}
-              <div className="bg-red w-full h-full"></div>
+              <div className="bg-red w-full h-full">
+                <p>ggggggggggggggggggggggggggggggggggggggggggg
+                  ggggggggggggggggggggggggggggggggggggggggggggg
+                </p>
+              </div>
             </div>
 
           </div>
