@@ -257,7 +257,8 @@ export default function ListingCard() {
             </button>
 
             {/* Scrollable Content */}
-            <div className="overflow-y-auto">
+            <div className="flex flex-row">
+              {/* <div className="grid md:grid-cols-2 gap-6 md:gap-8"> */}
               <div className="grid md:grid-cols-2 gap-6 md:gap-8">
 
                 {/* Image */}
