@@ -159,9 +159,9 @@ export default function ListingCard() {
 
 
       {openDialog && selectedListing && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div className="fixed mt-6 inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
 
-          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-slate-200 relative max-h-[80vh] overflow-hidden animate-in fade-in zoom-in duration-300">
+          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-slate-200 relative max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-300">
 
             <button
               onClick={closeDialog}
