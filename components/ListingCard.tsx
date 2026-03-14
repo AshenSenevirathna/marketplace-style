@@ -188,7 +188,33 @@ export default function ListingCard() {
                     />
                   </div>
                 </div>
-                <div className="bg-blue-300">hello</div>
+                <div className="bg-blue-300">
+                  <div className="p-8 flex flex-col justify-between">
+                    <div>
+                      <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">
+                        {selectedListing.location}
+                      </p>
+                      <h2 className="text-3xl font-extrabold text-slate-900 leading-snug mb-4">
+                        {selectedListing.title}
+                      </h2>
+                      <p className="text-slate-600 text-sm leading-relaxed mb-6 italic whitespace-pre-line">
+                        "{selectedListing.description}"
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-6 border-t border-slate-100 gap-3 md:gap-0">
+                      <p className="text-xs font-medium text-slate-400">
+                        Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span>
+                      </p>
+
+                      {selectedListing.price && (
+                        <p className="text-2xl font-extrabold text-slate-900">
+                          ${selectedListing.price}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
