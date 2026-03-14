@@ -162,91 +162,10 @@ export default function ListingCard() {
 
       {/* Modal */}
       {openDialog && selectedListing && (
-        // <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-        //   <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
-        //     <button 
-        //       onClick={closeDialog} 
-        //       className="absolute top-4 right-4 p-2 bg-white/80 rounded-full text-slate-500 hover:text-slate-900 z-10"
-        //     >
-        //       <X size={20} />
-        //     </button>
 
-        //     <div className="grid md:grid-cols-2">
-        //       <img
-        //         src={selectedListing.images[0]}
-        //         className="w-full h-full object-cover min-h-[300px]"
-        //         alt={selectedListing.title}
-        //       />
-        //       <div className="p-8 flex flex-col justify-center">
-        //         <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">{selectedListing.location}</p>
-        //         <h2 className="text-3xl font-black text-slate-900 leading-tight mb-4">{selectedListing.title}</h2>
-        //         <p className="text-slate-600 text-sm leading-relaxed mb-6 italic">"{selectedListing.description}"</p>
-
-        //         <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-        //           <p className="text-xs font-medium text-slate-400">Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span></p>
-        //           {selectedListing.price && (
-        //             <p className="text-xl font-black text-slate-900">${selectedListing.price}</p>
-        //           )}
-        //         </div>
-        //       </div>
-        //     </div>
-        //   </div>
-        // </div>
-        // <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        //   <div className="bg-white rounded-3xl w-full max-w-3xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300 border border-slate-200">
-
-        //     {/* Close Button */}
-        //     <button
-        //       onClick={closeDialog}
-        //       className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-md rounded-full text-slate-500 hover:text-slate-900 hover:scale-110 transition-transform z-10 shadow-sm"
-        //     >
-        //       <X size={22} />
-        //     </button>
-
-        //     {/* Main Grid */}
-        //     <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-
-        //       {/* Image */}
-        //       <div className="relative group overflow-hidden">
-        //         <img
-        //           src={selectedListing.images[0]}
-        //           alt={selectedListing.title}
-        //           className="w-full h-full object-cover min-h-[320px] transition-transform duration-500 group-hover:scale-105"
-        //         />
-        //       </div>
-
-        //       {/* Details */}
-        //       <div className="p-8 flex flex-col justify-between">
-        //         <div>
-        //           <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">
-        //             {selectedListing.location}
-        //           </p>
-        //           <h2 className="text-3xl font-extrabold text-slate-900 leading-snug mb-4">
-        //             {selectedListing.title}
-        //           </h2>
-        //           <p className="text-slate-600 text-sm leading-relaxed mb-6 italic">
-        //             "{selectedListing.description}"
-        //           </p>
-        //         </div>
-
-        //         <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-6 border-t border-slate-100 gap-3 md:gap-0">
-        //           <p className="text-xs font-medium text-slate-400">
-        //             Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span>
-        //           </p>
-
-        //           {selectedListing.price && (
-        //             <p className="text-2xl font-extrabold text-slate-900">
-        //               ${selectedListing.price}
-        //             </p>
-        //           )}
-        //         </div>
-        //       </div>
-        //     </div>
-        //   </div>
-        // </div>
 
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl animate-in fade-in zoom-in duration-300 border border-slate-200 relative flex flex-col max-h-[90vh]">
+          <div className="bg-white rounded-3xl w-full max-w-3xl shadow-2xl animate-in fade-in zoom-in duration-300 border border-slate-200 relative flex flex-col max-h-[70vh]">
 
             {/* Close Button */}
             <button
@@ -257,7 +176,7 @@ export default function ListingCard() {
             </button>
 
             {/* Scrollable Content */}
-            <div className="flex flex-col">
+            <div className="overflow-y-auto">
               {/* <div className="grid md:grid-cols-2 gap-6 md:gap-8"> */}
               <div className="grid md:grid-cols-2 gap-6 md:gap-8">
 
