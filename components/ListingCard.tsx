@@ -178,45 +178,7 @@ export default function ListingCard() {
             {/* Scrollable Content */}
             <div className="overflow-y-auto">
               {/* <div className="grid md:grid-cols-2 gap-6 md:gap-8"> */}
-              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-
-                {/* Image */}
-                <div className="relative group overflow-hidden rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none">
-                  <img
-                    src={selectedListing.images[0]}
-                    alt={selectedListing.title}
-                    className="w-full h-full object-cover min-h-[320px] transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-
-                {/* Details */}
-                <div className="p-8 flex flex-col justify-between">
-                  <div>
-                    <p className="text-blue-600 text-xs font-bold uppercase tracking-widest mb-2">
-                      {selectedListing.location}
-                    </p>
-                    <h2 className="text-3xl font-extrabold text-slate-900 leading-snug mb-4">
-                      {selectedListing.title}
-                    </h2>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-6 italic whitespace-pre-line">
-                      "{selectedListing.description}"
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-6 border-t border-slate-100 gap-3 md:gap-0">
-                    <p className="text-xs font-medium text-slate-400">
-                      Shared by <span className="text-slate-900 font-bold">{selectedListing.userName}</span>
-                    </p>
-
-                    {selectedListing.price && (
-                      <p className="text-2xl font-extrabold text-slate-900">
-                        ${selectedListing.price}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-              </div>
+              <div className="bg-red w-full h-full"></div>
             </div>
 
           </div>
