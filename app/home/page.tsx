@@ -25,7 +25,7 @@ export default function HomePage() {
       </section>
 
       <section className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto ">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
               <span className="text-blue-600 font-bold uppercase tracking-[0.2em] text-xs mb-3 block">
@@ -41,7 +41,7 @@ export default function HomePage() {
             </button>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
             <ListingCard />
             {/* <div className="hidden md:block"><ListingCard /></div>
             <div className="hidden lg:block"><ListingCard /></div> */}
