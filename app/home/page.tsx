@@ -43,8 +43,6 @@ export default function HomePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
             <ListingCard />
-            {/* <div className="hidden md:block"><ListingCard /></div>
-            <div className="hidden lg:block"><ListingCard /></div> */}
           </div>
         </div>
       </section>
